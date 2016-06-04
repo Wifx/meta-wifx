@@ -3,8 +3,6 @@ IMAGE_FEATURES += "ssh-server-openssh package-management"
 IMAGE_INSTALL = "\
     packagegroup-core-boot \
     packagegroup-core-full-cmdline \
-    packagegroup-base-wifi \
-    packagegroup-base-bluetooth \
     packagegroup-base-usbgadget \
     kernel-modules \
     lrzsz \
@@ -15,11 +13,9 @@ IMAGE_INSTALL = "\
     nbench-byte \
     lmbench \
     \
-    linux-firmware \
     i2c-tools \
     devmem2 \
     dosfstools \
-    libdrm-tests \
     mtd-utils \
     dtc \
     dtc-misc \
@@ -27,12 +23,21 @@ IMAGE_INSTALL = "\
     iptables \
     bridge-utils \
     evtest \
+    \
     python-pyserial \
     python-smbus \
     python-ctypes \
-    python-pip \
     python-distribute \
     python-pycurl \
+    python-flask \
+    python-flask-bcrypt \
+    python-flask-bootstrap \
+    python-flask-login \
+    python-flask-navigation \
+    python-flask-pymongo \
+    python-flask-sqlalchemy \
+    python-flask-wtf \
+    \
     gdbserver \
     usbutils \
     wget \

@@ -1,7 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
-COMPATIBLE_MACHINE += '|sama5d4-lorix-one|sama5d4-lorix-one-sd'
-
 SRC_URI += "file://000_atmel_v3.8.4_lorix_one_addition.patch"
+
+COMPATIBLE_MACHINE += '|sama5d4-lorix-one|sama5d4-lorix-one-sd'
 
 inherit cml1 deploy
 
