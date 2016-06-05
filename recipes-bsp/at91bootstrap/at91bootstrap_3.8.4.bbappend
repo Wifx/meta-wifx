@@ -16,12 +16,10 @@ do_configure() {
 	
 	if [ "${MACHINE}" = "sama5d4-lorix-one" ] || \
 	   [ "${MACHINE}" = "sama5d4-lorix-one-sd" ]; then
-		echo "coucou WIFX"
 		if [ -f "${S}/contrib/board/wifx/${AT91BOOTSTRAP_MACHINE}/${AT91BOOTSTRAP_TARGET}" ] && [ ! -f "${B}/.config" ]; then
 			cp "${S}/contrib/board/wifx/${AT91BOOTSTRAP_MACHINE}/${AT91BOOTSTRAP_TARGET}" "${B}/.config"
 		fi
 	else
-		echo "fuck WIFX"
 		if [ -f "${S}/board/${AT91BOOTSTRAP_MACHINE}/${AT91BOOTSTRAP_TARGET}" ] && [ ! -f "${B}/.config" ]; then
 			cp "${S}/board/${AT91BOOTSTRAP_MACHINE}/${AT91BOOTSTRAP_TARGET}" "${B}/.config"
 		fi
