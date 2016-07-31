@@ -1,4 +1,5 @@
-DESCRIPTION = "A generic image for network and communication."
+DESCRIPTION = "Image with LORIX One support."
+
 LICENSE = "MIT"
 PR = "r1"
 

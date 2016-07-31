@@ -1,5 +1,9 @@
 IMAGE_FEATURES += "ssh-server-openssh package-management"
 
+TOOLCHAIN_TARGET_TASK += "\
+    openssl-dev \
+    "
+
 IMAGE_INSTALL = "\
     packagegroup-core-boot \
     packagegroup-core-full-cmdline \
@@ -41,6 +45,7 @@ IMAGE_INSTALL = "\
     gdbserver \
     usbutils \
     wget \
+    ca-certificates \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     "
 
