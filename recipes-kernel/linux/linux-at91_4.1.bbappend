@@ -1,4 +1,5 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/linux-at91-4.1:"
+FILESEXTRAPATHS_prepend_sama5d4-lorix-one := "${THISDIR}/${BPN}-4.1:"
+
 SRC_URI += "file://000_atmel_linux-4.1-at91_lorix_one_addition.patch \
 	    file://sama5d4-lorix-one-defconfig \
            "
