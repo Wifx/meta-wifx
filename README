@@ -101,8 +101,8 @@ To get better performance, use the "poky-wifx" distribution by also adding that
 line:
 DISTRO = "poky-wifx"
 
-9/ Build core minimal image
-bitbake core-image-minimal
+9/ Build Wifx standard image
+bitbake wifx-base-image
 
 Typical bitbake output
 ======================
@@ -116,7 +116,7 @@ DISTRO            = "poky-wifx"
 DISTRO_VERSION    = "2.1"
 TUNE_FEATURES     = "arm armv7a vfp thumb neon       callconvention-hard       cortexa5"
 TARGET_FPU        = "hard"
-meta-wifx         = "master:fe5857d7226e2ad0bef2479fae69ec9a5dde60f1"
+meta-wifx         = "krogoth:9f56395887a6133c473aa8ba0b97ba758378c306"
 meta-atmel        = "krogoth:784a6a7fe94e6939325f60f4dd2cc24987ff090d"
 meta              
 meta-poky         
@@ -126,6 +126,14 @@ meta-networking
 meta-python       
 meta-ruby         
 meta-multimedia   = "krogoth:2092396f0e4fd3891b398c7180528aba67e1d522"
+
+10/ Or build the devel image which contains also the toolchain and app headers
+bitbake wifx-base-image-dev
+
+11/ Or build the SDK image which contains in addition the kernel headers and debug utilities
+bitbake wifx-base-image-sdk
+
+12/ In both cases, the toolchain installer is located in build-wifx/tmp/deploy/sdk
 
 
 Maintainers:
