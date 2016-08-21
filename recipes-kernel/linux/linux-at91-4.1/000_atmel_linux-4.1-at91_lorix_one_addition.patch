@@ -1,9 +1,9 @@
 diff --git a/arch/arm/boot/dts/at91-sama5d4_lorix_one.dts b/arch/arm/boot/dts/at91-sama5d4_lorix_one.dts
 new file mode 100644
-index 0000000..928fb87
+index 0000000..d8efd5c
 --- /dev/null
 +++ b/arch/arm/boot/dts/at91-sama5d4_lorix_one.dts
-@@ -0,0 +1,232 @@
+@@ -0,0 +1,237 @@
 +/*
 + * at91-sama5d4_lorix_one.dts - Device Tree file for SAMA5D4 LORIX One board
 + *
@@ -86,12 +86,23 @@ index 0000000..928fb87
 +	ahb {
 +		apb {
 +			spi0: spi@f8010000 {
-+				cs-gpios = <&pioC 3 0>, <0>, <0>, <0>;
++				cs-gpios = <&pioC 3 0>;
 +				status = "okay";
++				spidev@0 {
++					compatible = "spidev";
++					spi-max-frequency = <10000000>;
++					reg = <0>;
++				};
 +			};
 +
 +			i2c0: i2c@f8014000 {
 +				status = "okay";
++
++				lm75@4d {
++					compatible = "lm75";
++					reg = <0x4d>;
++					status = "okay";
++				};
 +			};
 +
 +			macb0: ethernet@f8020000 {
@@ -102,7 +113,7 @@ index 0000000..928fb87
 +
 +				phy0: ethernet-phy@1 {
 +					interrupt-parent = <&pioE>;
-+					interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
++					interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
 +					reg = <1>;
 +				};
 +			};
@@ -124,20 +135,6 @@ index 0000000..928fb87
 +				status = "okay";
 +			};
 +
-+			adc0: adc@fc034000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <
-+					/* external trigger conflicts with USBA_VBUS */
-+					&pinctrl_adc0_ad0
-+					&pinctrl_adc0_ad1
-+					&pinctrl_adc0_ad2
-+					&pinctrl_adc0_ad3
-+					&pinctrl_adc0_ad4
-+					>;
-+				atmel,adc-vref = <3300>;
-+				status = "okay";
-+			};
-+
 +			watchdog@fc068640 {
 +				status = "okay";
 +			};
@@ -154,7 +151,15 @@ index 0000000..928fb87
 +					};
 +					pinctrl_macb0_phy_irq: macb0_phy_irq_0 {
 +						atmel,pins =
-+							<AT91_PIOE 1 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
++							<AT91_PIOE 0 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
++					};
++					pinctrl_sx1301_rst: sx1301_rst {
++						atmel,pins =
++							<AT91_PIOA 1 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
++					};
++					pinctrl_sx1301_scanmode: sx1301_scanmode {
++						atmel,pins =
++							<AT91_PIOA 2 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_DOWN>;
 +					};
 +				};
 +			};
@@ -236,3 +241,831 @@ index 0000000..928fb87
 +		regulator-always-on;
 +	};
 +};
+diff --git a/arch/arm/configs/sama5d4-lorix-one-defconfig b/arch/arm/configs/sama5d4-lorix-one-defconfig
+new file mode 100644
+index 0000000..05d72b3
+--- /dev/null
++++ b/arch/arm/configs/sama5d4-lorix-one-defconfig
+@@ -0,0 +1,210 @@
++# CONFIG_SWAP is not set
++CONFIG_SYSVIPC=y
++CONFIG_FHANDLE=y
++CONFIG_IRQ_DOMAIN_DEBUG=y
++CONFIG_LOG_BUF_SHIFT=16
++CONFIG_CGROUPS=y
++CONFIG_BLK_DEV_INITRD=y
++CONFIG_EMBEDDED=y
++CONFIG_SLAB=y
++CONFIG_JUMP_LABEL=y
++CONFIG_MODULES=y
++CONFIG_MODULE_FORCE_LOAD=y
++CONFIG_MODULE_UNLOAD=y
++CONFIG_MODULE_FORCE_UNLOAD=y
++# CONFIG_BLK_DEV_BSG is not set
++# CONFIG_IOSCHED_DEADLINE is not set
++# CONFIG_IOSCHED_CFQ is not set
++CONFIG_ARCH_AT91=y
++CONFIG_SOC_SAMA5D4=y
++CONFIG_AEABI=y
++CONFIG_CMA=y
++CONFIG_CMA_DEBUGFS=y
++CONFIG_FORCE_MAX_ZONEORDER=15
++CONFIG_UACCESS_WITH_MEMCPY=y
++# CONFIG_ATAGS is not set
++CONFIG_ZBOOT_ROM_TEXT=0x0
++CONFIG_ZBOOT_ROM_BSS=0x0
++CONFIG_CMDLINE="console=ttyS0,115200 initrd=0x21100000,25165824 root=/dev/ram0 rw"
++CONFIG_CPU_IDLE=y
++CONFIG_VFP=y
++CONFIG_NEON=y
++CONFIG_KERNEL_MODE_NEON=y
++# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
++# CONFIG_SUSPEND is not set
++CONFIG_PM=y
++CONFIG_PM_DEBUG=y
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_UNIX=y
++CONFIG_INET=y
++CONFIG_IP_MULTICAST=y
++CONFIG_IP_PNP=y
++CONFIG_IP_PNP_DHCP=y
++CONFIG_IP_PNP_BOOTP=y
++CONFIG_IP_PNP_RARP=y
++# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
++# CONFIG_INET_XFRM_MODE_TUNNEL is not set
++# CONFIG_INET_XFRM_MODE_BEET is not set
++# CONFIG_INET_LRO is not set
++# CONFIG_INET_DIAG is not set
++CONFIG_IPV6=y
++CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++# CONFIG_STANDALONE is not set
++# CONFIG_PREVENT_FIRMWARE_BUILD is not set
++CONFIG_DMA_CMA=y
++CONFIG_MTD=y
++CONFIG_MTD_CMDLINE_PARTS=y
++CONFIG_MTD_BLOCK=y
++CONFIG_MTD_CFI=y
++CONFIG_MTD_NAND=y
++CONFIG_MTD_NAND_ATMEL=y
++CONFIG_MTD_UBI=y
++CONFIG_MTD_UBI_GLUEBI=y
++CONFIG_BLK_DEV_LOOP=y
++CONFIG_BLK_DEV_RAM=y
++CONFIG_BLK_DEV_RAM_COUNT=4
++CONFIG_BLK_DEV_RAM_SIZE=8192
++CONFIG_ATMEL_TCLIB=y
++CONFIG_ATMEL_SSC=y
++CONFIG_EEPROM_AT24=y
++CONFIG_EEPROM_93CX6=m
++CONFIG_NETDEVICES=y
++# CONFIG_NET_VENDOR_ARC is not set
++CONFIG_MACB=y
++# CONFIG_NET_VENDOR_BROADCOM is not set
++# CONFIG_NET_VENDOR_CIRRUS is not set
++# CONFIG_NET_VENDOR_FARADAY is not set
++# CONFIG_NET_VENDOR_HISILICON is not set
++# CONFIG_NET_VENDOR_INTEL is not set
++# CONFIG_NET_VENDOR_MARVELL is not set
++# CONFIG_NET_VENDOR_MICREL is not set
++# CONFIG_NET_VENDOR_MICROCHIP is not set
++# CONFIG_NET_VENDOR_NATSEMI is not set
++# CONFIG_NET_VENDOR_QUALCOMM is not set
++# CONFIG_NET_VENDOR_ROCKER is not set
++# CONFIG_NET_VENDOR_SAMSUNG is not set
++# CONFIG_NET_VENDOR_SEEQ is not set
++# CONFIG_NET_VENDOR_SMSC is not set
++# CONFIG_NET_VENDOR_STMICRO is not set
++# CONFIG_NET_VENDOR_VIA is not set
++# CONFIG_NET_VENDOR_WIZNET is not set
++CONFIG_MICREL_PHY=y
++# CONFIG_USB_NET_DRIVERS is not set
++# CONFIG_WLAN is not set
++# CONFIG_INPUT_MOUSEDEV is not set
++CONFIG_INPUT_EVDEV=y
++# CONFIG_INPUT_KEYBOARD is not set
++# CONFIG_INPUT_MOUSE is not set
++# CONFIG_SERIO is not set
++CONFIG_LEGACY_PTY_COUNT=4
++CONFIG_SERIAL_ATMEL=y
++CONFIG_SERIAL_ATMEL_CONSOLE=y
++CONFIG_HW_RANDOM=y
++CONFIG_I2C=y
++CONFIG_I2C_CHARDEV=y
++CONFIG_I2C_MUX=y
++CONFIG_I2C_AT91=y
++CONFIG_SPI=y
++CONFIG_SPI_ATMEL=y
++CONFIG_SPI_SPIDEV=y
++CONFIG_PINCTRL_AT91PIO4=y
++CONFIG_GPIO_SYSFS=y
++CONFIG_GPIO_SYSCON=y
++CONFIG_POWER_SUPPLY=y
++CONFIG_BATTERY_ACT8945A=y
++CONFIG_POWER_RESET=y
++CONFIG_SENSORS_LM75=y
++CONFIG_THERMAL=y
++CONFIG_WATCHDOG=y
++CONFIG_AT91SAM9X_WATCHDOG=y
++CONFIG_SAMA5D4_WATCHDOG=y
++CONFIG_MFD_ACT8945A=y
++CONFIG_MFD_ATMEL_FLEXCOM=y
++CONFIG_MFD_ATMEL_HLCDC=y
++CONFIG_REGULATOR=y
++CONFIG_REGULATOR_FIXED_VOLTAGE=y
++CONFIG_REGULATOR_VIRTUAL_CONSUMER=y
++CONFIG_REGULATOR_ACT8865=y
++CONFIG_REGULATOR_ACT8945A=y
++# CONFIG_HID is not set
++# CONFIG_USB_HID is not set
++CONFIG_USB=y
++CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
++CONFIG_USB_EHCI_HCD=y
++CONFIG_USB_OHCI_HCD=y
++CONFIG_USB_ACM=y
++CONFIG_USB_SERIAL=y
++CONFIG_USB_SERIAL_GENERIC=y
++CONFIG_USB_SERIAL_FTDI_SIO=y
++CONFIG_USB_SERIAL_PL2303=y
++CONFIG_USB_GADGET=y
++CONFIG_USB_ATMEL_USBA=y
++CONFIG_USB_CONFIGFS=m
++CONFIG_USB_CONFIGFS_ACM=y
++CONFIG_USB_G_SERIAL=m
++CONFIG_MMC=y
++# CONFIG_MMC_BLOCK_BOUNCE is not set
++CONFIG_MMC_SDHCI=y
++CONFIG_MMC_SDHCI_PLTFM=y
++CONFIG_MMC_SDHCI_OF_AT91=y
++CONFIG_MMC_ATMELMCI=y
++CONFIG_NEW_LEDS=y
++CONFIG_LEDS_CLASS=y
++CONFIG_LEDS_GPIO=y
++CONFIG_LEDS_PWM=y
++CONFIG_LEDS_TRIGGERS=y
++CONFIG_LEDS_TRIGGER_TIMER=y
++CONFIG_LEDS_TRIGGER_HEARTBEAT=y
++CONFIG_LEDS_TRIGGER_CPU=y
++CONFIG_LEDS_TRIGGER_GPIO=y
++CONFIG_RTC_CLASS=y
++CONFIG_RTC_DRV_AT91RM9200=y
++CONFIG_DMADEVICES=y
++CONFIG_AT_XDMAC=y
++CONFIG_DMATEST=m
++CONFIG_STAGING=y
++# CONFIG_IOMMU_SUPPORT is not set
++CONFIG_IIO=y
++CONFIG_IIO_BUFFER=y
++CONFIG_IIO_KFIFO_BUF=y
++CONFIG_IIO_TRIGGER=y
++CONFIG_PWM=y
++CONFIG_PWM_ATMEL=y
++CONFIG_PWM_ATMEL_HLCDC_PWM=y
++CONFIG_PWM_ATMEL_TCB=y
++CONFIG_RESET_CONTROLLER=y
++CONFIG_EXT4_FS=y
++CONFIG_FANOTIFY=y
++CONFIG_VFAT_FS=y
++CONFIG_TMPFS=y
++CONFIG_CONFIGFS_FS=y
++CONFIG_UBIFS_FS=y
++CONFIG_UBIFS_FS_ADVANCED_COMPR=y
++CONFIG_NFS_FS=y
++CONFIG_ROOT_NFS=y
++CONFIG_NLS_CODEPAGE_437=y
++CONFIG_NLS_CODEPAGE_850=y
++CONFIG_NLS_ISO8859_1=y
++CONFIG_NLS_UTF8=y
++CONFIG_STRIP_ASM_SYMS=y
++CONFIG_DEBUG_FS=y
++CONFIG_DEBUG_MEMORY_INIT=y
++# CONFIG_SCHED_DEBUG is not set
++# CONFIG_FTRACE is not set
++CONFIG_CRYPTO_CCM=y
++CONFIG_CRYPTO_GCM=y
++CONFIG_CRYPTO_HMAC=y
++CONFIG_CRYPTO_ARC4=y
++# CONFIG_CRYPTO_ANSI_CPRNG is not set
++CONFIG_CRYPTO_USER_API_HASH=m
++CONFIG_CRYPTO_USER_API_SKCIPHER=m
++CONFIG_CRYPTO_USER_API_RNG=m
++CONFIG_CRYPTO_DEV_ATMEL_AES=y
++CONFIG_CRYPTO_DEV_ATMEL_TDES=y
++CONFIG_CRYPTO_DEV_ATMEL_SHA=y
++CONFIG_CRC_CCITT=m
++CONFIG_CRC_ITU_T=m
++CONFIG_AVERAGE=y
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index 92c909e..0535375 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -706,6 +706,7 @@ static struct class *spidev_class;
+ #ifdef CONFIG_OF
+ static const struct of_device_id spidev_dt_ids[] = {
+ 	{ .compatible = "rohm,dh2228fv" },
++	{ .compatible = "spidev" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, spidev_dt_ids);
+diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+index f2e25ac..8583cfd 100644
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -148,7 +148,6 @@ struct atmel_uart_port {
+ 	struct scatterlist		sg_rx;
+ 	struct tasklet_struct	tasklet_rx;
+ 	struct tasklet_struct	tasklet_tx;
+-	atomic_t		tasklet_shutdown;
+ 	unsigned int		irq_status_prev;
+ 	unsigned int		tx_len;
+ 
+@@ -277,20 +276,6 @@ static bool atmel_use_dma_rx(struct uart_port *port)
+ 	return atmel_port->use_dma_rx;
+ }
+ 
+-static bool atmel_use_fifo(struct uart_port *port)
+-{
+-	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+-
+-	return atmel_port->fifo_size;
+-}
+-
+-static void atmel_tasklet_schedule(struct atmel_uart_port *atmel_port,
+-				   struct tasklet_struct *t)
+-{
+-	if (!atomic_read(&atmel_port->tasklet_shutdown))
+-		tasklet_schedule(t);
+-}
+-
+ static unsigned int atmel_get_lines_status(struct uart_port *port)
+ {
+ 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+@@ -492,21 +477,19 @@ static void atmel_start_tx(struct uart_port *port)
+ {
+ 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+ 
+-	if (atmel_use_pdc_tx(port) && (atmel_uart_readl(port, ATMEL_PDC_PTSR)
+-				       & ATMEL_PDC_TXTEN))
+-		/* The transmitter is already running.  Yes, we
+-		   really need this.*/
+-		return;
++	if (atmel_use_pdc_tx(port)) {
++		if (atmel_uart_readl(port, ATMEL_PDC_PTSR) & ATMEL_PDC_TXTEN)
++			/* The transmitter is already running.  Yes, we
++			   really need this.*/
++			return;
+ 
+-	if (atmel_use_pdc_tx(port) || atmel_use_dma_tx(port))
+ 		if ((port->rs485.flags & SER_RS485_ENABLED) &&
+ 		    !(port->rs485.flags & SER_RS485_RX_DURING_TX))
+ 			atmel_stop_rx(port);
+ 
+-	if (atmel_use_pdc_tx(port))
+ 		/* re-enable PDC transmit */
+ 		atmel_uart_writel(port, ATMEL_PDC_PTCR, ATMEL_PDC_TXTEN);
+-
++	}
+ 	/* Enable interrupts */
+ 	atmel_uart_writel(port, ATMEL_US_IER, atmel_port->tx_done_mask);
+ }
+@@ -734,7 +717,7 @@ static void atmel_rx_chars(struct uart_port *port)
+ 		status = atmel_uart_readl(port, ATMEL_US_CSR);
+ 	}
+ 
+-	atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_rx);
++	tasklet_schedule(&atmel_port->tasklet_rx);
+ }
+ 
+ /*
+@@ -805,7 +788,7 @@ static void atmel_complete_tx_dma(void *arg)
+ 	 * remaining data from the beginning of xmit->buf to xmit->head.
+ 	 */
+ 	if (!uart_circ_empty(xmit))
+-		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
++		tasklet_schedule(&atmel_port->tasklet_tx);
+ 
+ 	spin_unlock_irqrestore(&port->lock, flags);
+ }
+@@ -990,7 +973,7 @@ static void atmel_complete_rx_dma(void *arg)
+ 	struct uart_port *port = arg;
+ 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+ 
+-	atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_rx);
++	tasklet_schedule(&atmel_port->tasklet_rx);
+ }
+ 
+ static void atmel_release_rx_dma(struct uart_port *port)
+@@ -1030,7 +1013,7 @@ static void atmel_rx_from_dma(struct uart_port *port)
+ 	if (dmastat == DMA_ERROR) {
+ 		dev_dbg(port->dev, "Get residue error, restart tasklet\n");
+ 		atmel_uart_writel(port, ATMEL_US_IER, ATMEL_US_TIMEOUT);
+-		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_rx);
++		tasklet_schedule(&atmel_port->tasklet_rx);
+ 		return;
+ 	}
+ 
+@@ -1184,11 +1167,8 @@ static void atmel_uart_timer_callback(unsigned long data)
+ 	struct uart_port *port = (void *)data;
+ 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+ 
+-	if (!atomic_read(&atmel_port->tasklet_shutdown)) {
+-		tasklet_schedule(&atmel_port->tasklet_rx);
+-		mod_timer(&atmel_port->uart_timer,
+-			  jiffies + uart_poll_timeout(port));
+-	}
++	tasklet_schedule(&atmel_port->tasklet_rx);
++	mod_timer(&atmel_port->uart_timer, jiffies + uart_poll_timeout(port));
+ }
+ 
+ /*
+@@ -1210,8 +1190,7 @@ atmel_handle_receive(struct uart_port *port, unsigned int pending)
+ 		if (pending & (ATMEL_US_ENDRX | ATMEL_US_TIMEOUT)) {
+ 			atmel_uart_writel(port, ATMEL_US_IDR,
+ 					  (ATMEL_US_ENDRX | ATMEL_US_TIMEOUT));
+-			atmel_tasklet_schedule(atmel_port,
+-					       &atmel_port->tasklet_rx);
++			tasklet_schedule(&atmel_port->tasklet_rx);
+ 		}
+ 
+ 		if (pending & (ATMEL_US_RXBRK | ATMEL_US_OVRE |
+@@ -1223,8 +1202,7 @@ atmel_handle_receive(struct uart_port *port, unsigned int pending)
+ 		if (pending & ATMEL_US_TIMEOUT) {
+ 			atmel_uart_writel(port, ATMEL_US_IDR,
+ 					  ATMEL_US_TIMEOUT);
+-			atmel_tasklet_schedule(atmel_port,
+-					       &atmel_port->tasklet_rx);
++			tasklet_schedule(&atmel_port->tasklet_rx);
+ 		}
+ 	}
+ 
+@@ -1254,7 +1232,7 @@ atmel_handle_transmit(struct uart_port *port, unsigned int pending)
+ 		/* Either PDC or interrupt transmission */
+ 		atmel_uart_writel(port, ATMEL_US_IDR,
+ 				  atmel_port->tx_done_mask);
+-		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
++		tasklet_schedule(&atmel_port->tasklet_tx);
+ 	}
+ }
+ 
+@@ -1704,15 +1682,15 @@ static void atmel_init_rs485(struct uart_port *port,
+ 	struct atmel_uart_data *pdata = dev_get_platdata(&pdev->dev);
+ 
+ 	if (np) {
+-		struct serial_rs485 *rs485conf = &port->rs485;
+ 		u32 rs485_delay[2];
+ 		/* rs485 properties */
+ 		if (of_property_read_u32_array(np, "rs485-rts-delay",
+ 					rs485_delay, 2) == 0) {
++			struct serial_rs485 *rs485conf = &port->rs485;
++
+ 			rs485conf->delay_rts_before_send = rs485_delay[0];
+ 			rs485conf->delay_rts_after_send = rs485_delay[1];
+ 			rs485conf->flags = 0;
+-		}
+ 
+ 		if (of_get_property(np, "rs485-rx-during-tx", NULL))
+ 			rs485conf->flags |= SER_RS485_RX_DURING_TX;
+@@ -1720,6 +1698,7 @@ static void atmel_init_rs485(struct uart_port *port,
+ 		if (of_get_property(np, "linux,rs485-enabled-at-boot-time",
+ 								NULL))
+ 			rs485conf->flags |= SER_RS485_ENABLED;
++		}
+ 	} else {
+ 		port->rs485       = pdata->rs485;
+ 	}
+@@ -1877,11 +1856,8 @@ static int atmel_startup(struct uart_port *port)
+ 	if (retval)
+ 		goto free_irq;
+ 
+-	atomic_set(&atmel_port->tasklet_shutdown, 0);
+-	tasklet_init(&atmel_port->tasklet_rx, atmel_tasklet_rx_func,
+-			(unsigned long)port);
+-	tasklet_init(&atmel_port->tasklet_tx, atmel_tasklet_tx_func,
+-			(unsigned long)port);
++	tasklet_enable(&atmel_port->tasklet_rx);
++	tasklet_enable(&atmel_port->tasklet_tx);
+ 
+ 	/*
+ 	 * Initialize DMA (if necessary)
+@@ -2003,36 +1979,31 @@ static void atmel_shutdown(struct uart_port *port)
+ {
+ 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+ 
+-	/* Disable interrupts at device level */
+-	atmel_uart_writel(port, ATMEL_US_IDR, -1);
+-
+-	/* Prevent spurious interrupts from scheduling the tasklet */
+-	atomic_inc(&atmel_port->tasklet_shutdown);
+-
+ 	/*
+ 	 * Prevent any tasklets being scheduled during
+ 	 * cleanup
+ 	 */
+ 	del_timer_sync(&atmel_port->uart_timer);
+ 
+-	/* Make sure that no interrupt is on the fly */
+-	synchronize_irq(port->irq);
+-
+ 	/*
+ 	 * Clear out any scheduled tasklets before
+ 	 * we destroy the buffers
+ 	 */
++	tasklet_disable(&atmel_port->tasklet_rx);
++	tasklet_disable(&atmel_port->tasklet_tx);
+ 	tasklet_kill(&atmel_port->tasklet_rx);
+ 	tasklet_kill(&atmel_port->tasklet_tx);
+ 
+ 	/*
+ 	 * Ensure everything is stopped and
+-	 * disable port and break condition.
++	 * disable all interrupts, port and break condition.
+ 	 */
+ 	atmel_stop_rx(port);
+ 	atmel_stop_tx(port);
+ 
+ 	atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_RSTSTA);
++	atmel_uart_writel(port, ATMEL_US_IDR, -1);
++
+ 
+ 	/*
+ 	 * Shut-down the DMA.
+@@ -2203,12 +2174,7 @@ static void atmel_set_termios(struct uart_port *port, struct ktermios *termios,
+ 		mode |= ATMEL_US_USMODE_RS485;
+ 	} else if (termios->c_cflag & CRTSCTS) {
+ 		/* RS232 with hardware handshake (RTS/CTS) */
+-		if (atmel_use_dma_rx(port) && !atmel_use_fifo(port)) {
+-			dev_info(port->dev, "not enabling hardware flow control because DMA is used");
+-			termios->c_cflag &= ~CRTSCTS;
+-		} else {
+-			mode |= ATMEL_US_USMODE_HWHS;
+-		}
++		mode |= ATMEL_US_USMODE_HWHS;
+ 	} else {
+ 		/* RS232 without hadware handshake */
+ 		mode |= ATMEL_US_USMODE_NORMAL;
+@@ -2417,6 +2383,13 @@ static int atmel_init_port(struct atmel_uart_port *atmel_port,
+ 	port->irq	= pdev->resource[1].start;
+ 	port->rs485_config	= atmel_config_rs485;
+ 
++	tasklet_init(&atmel_port->tasklet_rx, atmel_tasklet_rx_func,
++			(unsigned long)port);
++	tasklet_init(&atmel_port->tasklet_tx, atmel_tasklet_tx_func,
++			(unsigned long)port);
++	tasklet_disable(&atmel_port->tasklet_rx);
++	tasklet_disable(&atmel_port->tasklet_tx);
++
+ 	memset(&atmel_port->rx_ring, 0, sizeof(atmel_port->rx_ring));
+ 
+ 	if (pdata && pdata->regs) {
+@@ -2821,7 +2794,6 @@ static int atmel_serial_probe(struct platform_device *pdev)
+ 	port->uart.line = ret;
+ 	atmel_serial_probe_fifos(port, pdev);
+ 
+-	atomic_set(&port->tasklet_shutdown, 0);
+ 	spin_lock_init(&port->lock_suspended);
+ 
+ 	ret = atmel_init_gpios(port, &pdev->dev);
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index 484ef6e..371e560 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -115,122 +115,10 @@
+ #define __maybe_unused			__attribute__((unused))
+ #define __always_unused			__attribute__((unused))
+ 
+-/* gcc version specific checks */
+-
+-#if GCC_VERSION < 30200
+-# error Sorry, your compiler is too old - please upgrade it.
+-#endif
+-
+-#if GCC_VERSION < 30300
+-# define __used			__attribute__((__unused__))
+-#else
+-# define __used			__attribute__((__used__))
+-#endif
+-
+-#ifdef CONFIG_GCOV_KERNEL
+-# if GCC_VERSION < 30400
+-#   error "GCOV profiling support for gcc versions below 3.4 not included"
+-# endif /* __GNUC_MINOR__ */
+-#endif /* CONFIG_GCOV_KERNEL */
+-
+-#if GCC_VERSION >= 30400
+-#define __must_check		__attribute__((warn_unused_result))
+-#endif
+-
+-#if GCC_VERSION >= 40000
+-
+-/* GCC 4.1.[01] miscompiles __weak */
+-#ifdef __KERNEL__
+-# if GCC_VERSION >= 40100 &&  GCC_VERSION <= 40101
+-#  error Your version of gcc miscompiles the __weak directive
+-# endif
+-#endif
+-
+-#define __used			__attribute__((__used__))
+-#define __compiler_offsetof(a, b)					\
+-	__builtin_offsetof(a, b)
+-
+-#if GCC_VERSION >= 40100 && GCC_VERSION < 40600
+-# define __compiletime_object_size(obj) __builtin_object_size(obj, 0)
+-#endif
+-
+-#if GCC_VERSION >= 40300
+-/* Mark functions as cold. gcc will assume any path leading to a call
+- * to them will be unlikely.  This means a lot of manual unlikely()s
+- * are unnecessary now for any paths leading to the usual suspects
+- * like BUG(), printk(), panic() etc. [but let's keep them for now for
+- * older compilers]
+- *
+- * Early snapshots of gcc 4.3 don't support this and we can't detect this
+- * in the preprocessor, but we can live with this because they're unreleased.
+- * Maketime probing would be overkill here.
+- *
+- * gcc also has a __attribute__((__hot__)) to move hot functions into
+- * a special section, but I don't see any sense in this right now in
+- * the kernel context
+- */
+-#define __cold			__attribute__((__cold__))
+-
+-#define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
+-
+-#ifndef __CHECKER__
+-# define __compiletime_warning(message) __attribute__((warning(message)))
+-# define __compiletime_error(message) __attribute__((error(message)))
+-#endif /* __CHECKER__ */
+-#endif /* GCC_VERSION >= 40300 */
+-
+-#if GCC_VERSION >= 40500
+-/*
+- * Mark a position in code as unreachable.  This can be used to
+- * suppress control flow warnings after asm blocks that transfer
+- * control elsewhere.
+- *
+- * Early snapshots of gcc 4.5 don't support this and we can't detect
+- * this in the preprocessor, but we can live with this because they're
+- * unreleased.  Really, we need to have autoconf for the kernel.
+- */
+-#define unreachable() __builtin_unreachable()
+-
+-/* Mark a function definition as prohibited from being cloned. */
+-#define __noclone	__attribute__((__noclone__))
+-
+-#endif /* GCC_VERSION >= 40500 */
+-
+-#if GCC_VERSION >= 40600
+-/*
+- * Tell the optimizer that something else uses this function or variable.
+- */
+-#define __visible	__attribute__((externally_visible))
+-#endif
+-
+-/*
+- * GCC 'asm goto' miscompiles certain code sequences:
+- *
+- *   http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58670
+- *
+- * Work it around via a compiler barrier quirk suggested by Jakub Jelinek.
+- *
+- * (asm goto is automatically volatile - the naming reflects this.)
+- */
+-#define asm_volatile_goto(x...)	do { asm goto(x); asm (""); } while (0)
+-
+-#ifdef CONFIG_ARCH_USE_BUILTIN_BSWAP
+-#if GCC_VERSION >= 40400
+-#define __HAVE_BUILTIN_BSWAP32__
+-#define __HAVE_BUILTIN_BSWAP64__
+-#endif
+-#if GCC_VERSION >= 40800 || (defined(__powerpc__) && GCC_VERSION >= 40600)
+-#define __HAVE_BUILTIN_BSWAP16__
+-#endif
+-#endif /* CONFIG_ARCH_USE_BUILTIN_BSWAP */
+-
+-#if GCC_VERSION >= 50000
+-#define KASAN_ABI_VERSION 4
+-#elif GCC_VERSION >= 40902
+-#define KASAN_ABI_VERSION 3
+-#endif
+-
+-#endif	/* gcc version >= 40000 specific checks */
++#define __gcc_header(x) #x
++#define _gcc_header(x) __gcc_header(linux/compiler-gcc##x.h)
++#define gcc_header(x) _gcc_header(x)
++#include gcc_header(__GNUC__)
+ 
+ #if !defined(__noclone)
+ #define __noclone	/* not needed */
+diff --git a/include/linux/compiler-gcc3.h b/include/linux/compiler-gcc3.h
+new file mode 100644
+index 0000000..7d89feb
+--- /dev/null
++++ b/include/linux/compiler-gcc3.h
+@@ -0,0 +1,23 @@
++#ifndef __LINUX_COMPILER_H
++#error "Please don't include <linux/compiler-gcc3.h> directly, include <linux/compiler.h> instead."
++#endif
++
++#if GCC_VERSION < 30200
++# error Sorry, your compiler is too old - please upgrade it.
++#endif
++
++#if GCC_VERSION >= 30300
++# define __used			__attribute__((__used__))
++#else
++# define __used			__attribute__((__unused__))
++#endif
++
++#if GCC_VERSION >= 30400
++#define __must_check		__attribute__((warn_unused_result))
++#endif
++
++#ifdef CONFIG_GCOV_KERNEL
++# if GCC_VERSION < 30400
++#   error "GCOV profiling support for gcc versions below 3.4 not included"
++# endif /* __GNUC_MINOR__ */
++#endif /* CONFIG_GCOV_KERNEL */
+diff --git a/include/linux/compiler-gcc4.h b/include/linux/compiler-gcc4.h
+new file mode 100644
+index 0000000..769e198
+--- /dev/null
++++ b/include/linux/compiler-gcc4.h
+@@ -0,0 +1,91 @@
++#ifndef __LINUX_COMPILER_H
++#error "Please don't include <linux/compiler-gcc4.h> directly, include <linux/compiler.h> instead."
++#endif
++
++/* GCC 4.1.[01] miscompiles __weak */
++#ifdef __KERNEL__
++# if GCC_VERSION >= 40100 &&  GCC_VERSION <= 40101
++#  error Your version of gcc miscompiles the __weak directive
++# endif
++#endif
++
++#define __used			__attribute__((__used__))
++#define __must_check 		__attribute__((warn_unused_result))
++#define __compiler_offsetof(a,b) __builtin_offsetof(a,b)
++
++#if GCC_VERSION >= 40100 && GCC_VERSION < 40600
++# define __compiletime_object_size(obj) __builtin_object_size(obj, 0)
++#endif
++
++#if GCC_VERSION >= 40300
++/* Mark functions as cold. gcc will assume any path leading to a call
++   to them will be unlikely.  This means a lot of manual unlikely()s
++   are unnecessary now for any paths leading to the usual suspects
++   like BUG(), printk(), panic() etc. [but let's keep them for now for
++   older compilers]
++
++   Early snapshots of gcc 4.3 don't support this and we can't detect this
++   in the preprocessor, but we can live with this because they're unreleased.
++   Maketime probing would be overkill here.
++
++   gcc also has a __attribute__((__hot__)) to move hot functions into
++   a special section, but I don't see any sense in this right now in
++   the kernel context */
++#define __cold			__attribute__((__cold__))
++
++#define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
++
++#ifndef __CHECKER__
++# define __compiletime_warning(message) __attribute__((warning(message)))
++# define __compiletime_error(message) __attribute__((error(message)))
++#endif /* __CHECKER__ */
++#endif /* GCC_VERSION >= 40300 */
++
++#if GCC_VERSION >= 40500
++/*
++ * Mark a position in code as unreachable.  This can be used to
++ * suppress control flow warnings after asm blocks that transfer
++ * control elsewhere.
++ *
++ * Early snapshots of gcc 4.5 don't support this and we can't detect
++ * this in the preprocessor, but we can live with this because they're
++ * unreleased.  Really, we need to have autoconf for the kernel.
++ */
++#define unreachable() __builtin_unreachable()
++
++/* Mark a function definition as prohibited from being cloned. */
++#define __noclone	__attribute__((__noclone__))
++
++#endif /* GCC_VERSION >= 40500 */
++
++#if GCC_VERSION >= 40600
++/*
++ * Tell the optimizer that something else uses this function or variable.
++ */
++#define __visible __attribute__((externally_visible))
++#endif
++
++/*
++ * GCC 'asm goto' miscompiles certain code sequences:
++ *
++ *   http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58670
++ *
++ * Work it around via a compiler barrier quirk suggested by Jakub Jelinek.
++ *
++ * (asm goto is automatically volatile - the naming reflects this.)
++ */
++#define asm_volatile_goto(x...)	do { asm goto(x); asm (""); } while (0)
++
++#ifdef CONFIG_ARCH_USE_BUILTIN_BSWAP
++#if GCC_VERSION >= 40400
++#define __HAVE_BUILTIN_BSWAP32__
++#define __HAVE_BUILTIN_BSWAP64__
++#endif
++#if GCC_VERSION >= 40800 || (defined(__powerpc__) && GCC_VERSION >= 40600)
++#define __HAVE_BUILTIN_BSWAP16__
++#endif
++#endif /* CONFIG_ARCH_USE_BUILTIN_BSWAP */
++
++#if GCC_VERSION >= 40902
++#define KASAN_ABI_VERSION 3
++#endif
+diff --git a/include/linux/compiler-gcc5.h b/include/linux/compiler-gcc5.h
+new file mode 100644
+index 0000000..efee493
+--- /dev/null
++++ b/include/linux/compiler-gcc5.h
+@@ -0,0 +1,67 @@
++#ifndef __LINUX_COMPILER_H
++#error "Please don't include <linux/compiler-gcc5.h> directly, include <linux/compiler.h> instead."
++#endif
++
++#define __used				__attribute__((__used__))
++#define __must_check			__attribute__((warn_unused_result))
++#define __compiler_offsetof(a, b)	__builtin_offsetof(a, b)
++
++/* Mark functions as cold. gcc will assume any path leading to a call
++   to them will be unlikely.  This means a lot of manual unlikely()s
++   are unnecessary now for any paths leading to the usual suspects
++   like BUG(), printk(), panic() etc. [but let's keep them for now for
++   older compilers]
++
++   Early snapshots of gcc 4.3 don't support this and we can't detect this
++   in the preprocessor, but we can live with this because they're unreleased.
++   Maketime probing would be overkill here.
++
++   gcc also has a __attribute__((__hot__)) to move hot functions into
++   a special section, but I don't see any sense in this right now in
++   the kernel context */
++#define __cold			__attribute__((__cold__))
++
++#define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
++
++#ifndef __CHECKER__
++# define __compiletime_warning(message) __attribute__((warning(message)))
++# define __compiletime_error(message) __attribute__((error(message)))
++#endif /* __CHECKER__ */
++
++/*
++ * Mark a position in code as unreachable.  This can be used to
++ * suppress control flow warnings after asm blocks that transfer
++ * control elsewhere.
++ *
++ * Early snapshots of gcc 4.5 don't support this and we can't detect
++ * this in the preprocessor, but we can live with this because they're
++ * unreleased.  Really, we need to have autoconf for the kernel.
++ */
++#define unreachable() __builtin_unreachable()
++
++/* Mark a function definition as prohibited from being cloned. */
++#define __noclone	__attribute__((__noclone__))
++
++/*
++ * Tell the optimizer that something else uses this function or variable.
++ */
++#define __visible __attribute__((externally_visible))
++
++/*
++ * GCC 'asm goto' miscompiles certain code sequences:
++ *
++ *   http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58670
++ *
++ * Work it around via a compiler barrier quirk suggested by Jakub Jelinek.
++ *
++ * (asm goto is automatically volatile - the naming reflects this.)
++ */
++#define asm_volatile_goto(x...)	do { asm goto(x); asm (""); } while (0)
++
++#ifdef CONFIG_ARCH_USE_BUILTIN_BSWAP
++#define __HAVE_BUILTIN_BSWAP32__
++#define __HAVE_BUILTIN_BSWAP64__
++#define __HAVE_BUILTIN_BSWAP16__
++#endif /* CONFIG_ARCH_USE_BUILTIN_BSWAP */
++
++#define KASAN_ABI_VERSION 4
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 79e8661..c33380a 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -160,6 +160,7 @@ cpp_flags      = -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(LINUXINCLUDE)     \
+ ld_flags       = $(LDFLAGS) $(ldflags-y)
+ 
+ dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
++		 -I$(srctree)/include                                    \
+ 		 -I$(srctree)/arch/$(SRCARCH)/boot/dts                   \
+ 		 -I$(srctree)/arch/$(SRCARCH)/boot/dts/include           \
+ 		 -I$(srctree)/drivers/of/testcase-data                   \

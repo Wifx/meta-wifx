@@ -28,25 +28,14 @@ IMAGE_INSTALL = "\
     bridge-utils \
     evtest \
     \
-    python-pyserial \
-    python-smbus \
-    python-ctypes \
-    python-distribute \
-    python-pycurl \
-    python-flask \
-    python-flask-bcrypt \
-    python-flask-bootstrap \
-    python-flask-login \
-    python-flask-navigation \
-    python-flask-pymongo \
-    python-flask-sqlalchemy \
-    python-flask-wtf \
-    \
     gdbserver \
     usbutils \
     wget \
-    ca-certificates \
+    loragw \
+    reset-lgw \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     "
 
 inherit core-image
+
+EXTRA_USERS_PARAMS = "usermod -P lorix4u root;"

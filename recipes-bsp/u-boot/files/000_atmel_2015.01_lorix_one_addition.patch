@@ -72,10 +72,10 @@ index 0000000..67a5c23
 +obj-y += sama5d4_lorix_one.o
 diff --git a/board/wifx/sama5d4_lorix_one/sama5d4_lorix_one.c b/board/wifx/sama5d4_lorix_one/sama5d4_lorix_one.c
 new file mode 100644
-index 0000000..807ba4b
+index 0000000..514ebba
 --- /dev/null
 +++ b/board/wifx/sama5d4_lorix_one/sama5d4_lorix_one.c
-@@ -0,0 +1,379 @@
+@@ -0,0 +1,368 @@
 +/*
 + * Copyright (C) 2015 Wifx
 + *		      Yannick Lanz <yannick.lanz@gmail.com>
@@ -180,14 +180,6 @@ index 0000000..807ba4b
 +}
 +#endif
 +
-+#ifdef CONFIG_CMD_USB
-+static void sama5d4_lorix_one_usb_hw_init(void)
-+{
-+	at91_set_pio_output(AT91_PIO_PORTE, 11, 1);
-+	at91_set_pio_output(AT91_PIO_PORTE, 14, 1);
-+}
-+#endif
-+
 +#ifdef CONFIG_GENERIC_ATMEL_MCI
 +void sama5d4_lorix_one_mci1_hw_init(void)
 +{
@@ -218,7 +210,7 @@ index 0000000..807ba4b
 +int board_mmc_init(bd_t *bis)
 +{
 +	/* Enable the power supply */
-+	at91_set_pio_output(AT91_PIO_PORTE, 4, 0);
++	//at91_set_pio_output(AT91_PIO_PORTE, 4, 0);
 +
 +	return atmel_mci_init((void *)ATMEL_BASE_MCI1);
 +}
@@ -282,9 +274,6 @@ index 0000000..807ba4b
 +#ifdef CONFIG_MACB
 +	sama5d4_lorix_one_macb0_hw_init();
 +#endif
-+#ifdef CONFIG_CMD_USB
-+	sama5d4_lorix_one_usb_hw_init();
-+#endif
 +#ifdef CONFIG_USB_GADGET_ATMEL_USBA
 +	at91_udp_hw_init();
 +#endif
@@ -324,7 +313,7 @@ index 0000000..807ba4b
 +				printf("i2c bus 0 is not valid\n");
 +			} else {
 +				/* Read MAC address */
-+				if (i2c_read(0x5c, 0x9a, 1, buf, 6)) {
++				if (i2c_read(0x58, 0x9a, 1, buf, 6)) {
 +					printf("MAC address read failed\n");
 +				} else {
 +					if (is_valid_ether_addr(buf)) {
@@ -475,12 +464,25 @@ index 0000000..4c2566b
 +CONFIG_SYS_EXTRA_OPTIONS="SAMA5D4,SYS_USE_NANDFLASH"
 ++S:CONFIG_ARM=y
 ++S:CONFIG_TARGET_SAMA5D4_LORIX_ONE=y
+diff --git a/include/configs/at91-sama5_common.h b/include/configs/at91-sama5_common.h
+index d63474e..13645f3 100644
+--- a/include/configs/at91-sama5_common.h
++++ b/include/configs/at91-sama5_common.h
+@@ -40,7 +40,7 @@
+ /* general purpose I/O */
+ #define CONFIG_AT91_GPIO
+ 
+-#define CONFIG_BOOTDELAY		3
++#define CONFIG_BOOTDELAY		1
+ 
+ /*
+  * BOOTP options
 diff --git a/include/configs/sama5d4_lorix_one.h b/include/configs/sama5d4_lorix_one.h
 new file mode 100644
-index 0000000..2285cd1
+index 0000000..743cb2a
 --- /dev/null
 +++ b/include/configs/sama5d4_lorix_one.h
-@@ -0,0 +1,164 @@
+@@ -0,0 +1,162 @@
 +/*
 + * Configuration settings for the SAMA5D4 LORIX One Wifx gateway.
 + *
@@ -505,8 +507,8 @@ index 0000000..2285cd1
 +
 +/* SDRAM */
 +#define CONFIG_NR_DRAM_BANKS		1
-+#define CONFIG_SYS_SDRAM_BASE           ATMEL_BASE_DDRCS
-+#define CONFIG_SYS_SDRAM_SIZE		0x20000000
++#define CONFIG_SYS_SDRAM_BASE       ATMEL_BASE_DDRCS
++#define CONFIG_SYS_SDRAM_SIZE		0x08000000
 +
 +#ifdef CONFIG_SPL_BUILD
 +#define CONFIG_SYS_INIT_SP_ADDR		0x210000
@@ -558,8 +560,6 @@ index 0000000..2285cd1
 +#define CONFIG_USB_GADGET
 +#define CONFIG_USB_GADGET_DUALSPEED
 +#define CONFIG_USB_GADGET_ATMEL_USBA
-+#define CONFIG_USB_ETHER
-+#define CONFIG_USB_ETH_RNDIS
 +#define CONFIG_USBNET_MANUFACTURER      "Wifx LORIX One"
 +
 +#if defined(CONFIG_CMD_USB) || defined(CONFIG_CMD_MMC)
