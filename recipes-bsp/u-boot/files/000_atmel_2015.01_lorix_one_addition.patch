@@ -465,7 +465,7 @@ index 0000000..4c2566b
 ++S:CONFIG_ARM=y
 ++S:CONFIG_TARGET_SAMA5D4_LORIX_ONE=y
 diff --git a/include/configs/at91-sama5_common.h b/include/configs/at91-sama5_common.h
-index d63474e..13645f3 100644
+index d63474e..bd3150b 100644
 --- a/include/configs/at91-sama5_common.h
 +++ b/include/configs/at91-sama5_common.h
 @@ -40,7 +40,7 @@
@@ -477,6 +477,20 @@ index d63474e..13645f3 100644
  
  /*
   * BOOTP options
+@@ -82,11 +82,11 @@
+ 				"fatload mmc 0:1 0x22000000 zImage; "	\
+ 				"bootz 0x22000000 - 0x21000000"
+ #define CONFIG_BOOTARGS							\
+-	"console=ttyS0,115200 earlyprintk "				\
++	"console=ttyS0,115200 earlyprintk cma=0 "				\
+ 	"root=/dev/mmcblk0p2 rw rootwait"
+ #else
+ #define CONFIG_BOOTARGS							\
+-	"console=ttyS0,115200 earlyprintk "				\
++	"console=ttyS0,115200 earlyprintk cma=0 "				\
+ 	"mtdparts=atmel_nand:256k(bootstrap)ro,512k(uboot)ro,"		\
+ 	"256K(env),256k(env_redundent),256k(spare),"			\
+ 	"512k(dtb),6M(kernel)ro,-(rootfs) "				\
 diff --git a/include/configs/sama5d4_lorix_one.h b/include/configs/sama5d4_lorix_one.h
 new file mode 100644
 index 0000000..743cb2a
