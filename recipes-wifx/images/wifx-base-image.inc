@@ -1,5 +1,7 @@
 IMAGE_FEATURES += "ssh-server-openssh package-management"
 
+TOOLCHAIN_HOST_TASK += ""
+
 TOOLCHAIN_TARGET_TASK += "\
     openssl-dev \
     "
@@ -31,11 +33,21 @@ IMAGE_INSTALL = "\
     gdbserver \
     usbutils \
     wget \
-    loragw \
+    ntp \
+    openssl \
+    openssl-misc \
+    ca-certificates \
+    perl \
     reset-lgw \
+    lora-gateway \
+    packet-forwarder \
+    update-gwid \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     "
 
 inherit core-image
 
-EXTRA_USERS_PARAMS = "usermod -P lorix4u root;"
+INHERIT += "extrausers"
+
+# lorix4u encrypted password
+#EXTRA_USERS_PARAMS = "usermod -P 'lorix4u' root;"
