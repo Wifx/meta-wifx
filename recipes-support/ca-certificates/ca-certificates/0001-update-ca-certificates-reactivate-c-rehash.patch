@@ -1,0 +1,44 @@
+From 448dede35351909d41d9b7aebcdefd2aac1ffe44 Mon Sep 17 00:00:00 2001
+From: Yannick Lanz <yannick.lanz@gmail.com>
+Date: Wed, 14 Dec 2016 19:11:38 +0100
+Subject: [PATCH] update ca-certificates reactivate c-rehash
+
+Signed-off-by: Yannick Lanz <yannick.lanz@gmail.com>
+---
+ sbin/update-ca-certificates | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/sbin/update-ca-certificates b/sbin/update-ca-certificates
+index 69b6861..e4e9192 100755
+--- a/sbin/update-ca-certificates
++++ b/sbin/update-ca-certificates
+@@ -202,16 +202,16 @@ rm -f "$CERTBUNDLE"
+ ADDED_CNT=$(wc -l < "$ADDED")
+ REMOVED_CNT=$(wc -l < "$REMOVED")
+ 
+-#if [ "$ADDED_CNT" -gt 0 ] || [ "$REMOVED_CNT" -gt 0 ]
+-#then
+-#  # only run if set of files has changed
+-#  if [ "$verbose" = 0 ]
+-#  then
+-#    c_rehash . > /dev/null
+-#  else
+-#    c_rehash .
+-#  fi
+-#fi
++if [ "$ADDED_CNT" -gt 0 ] || [ "$REMOVED_CNT" -gt 0 ]
++then
++  # only run if set of files has changed
++  if [ "$verbose" = 0 ]
++  then
++    c_rehash . > /dev/null
++  else
++    c_rehash .
++  fi
++fi
+ 
+ chmod 0644 "$TEMPBUNDLE"
+ mv -f "$TEMPBUNDLE" "$CERTBUNDLE"
+-- 
+2.7.4
+
