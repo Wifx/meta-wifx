@@ -4,7 +4,7 @@ AUTHOR = "Wifx Sàrl"
 SECTION = "base"
 LICENSE = "WIFX"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/LICENSE;md5=323e5da3c7dfd45dac56506af122354f"
-PR = "r2"
+PR = "r0"
 
 inherit update-rc.d
 
