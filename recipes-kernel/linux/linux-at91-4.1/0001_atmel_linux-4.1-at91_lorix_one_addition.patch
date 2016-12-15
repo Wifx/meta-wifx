@@ -1,6 +1,6 @@
 diff --git a/arch/arm/boot/dts/at91-sama5d4_lorix_one.dts b/arch/arm/boot/dts/at91-sama5d4_lorix_one.dts
 new file mode 100644
-index 0000000..5d83738
+index 0000000..8637ca2
 --- /dev/null
 +++ b/arch/arm/boot/dts/at91-sama5d4_lorix_one.dts
 @@ -0,0 +1,239 @@
@@ -86,7 +86,7 @@ index 0000000..5d83738
 +	ahb {
 +		apb {
 +			spi0: spi@f8010000 {
-+				cs-gpios = <&pioC 3 0>;
++				cs-gpios = <&pioD 31 0>;
 +				status = "okay";
 +				spidev@0 {
 +					compatible = "spidev";
