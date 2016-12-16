@@ -1,5 +1,5 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
-SRC_URI += "file://000_atmel_v3.8.4_lorix_one_addition.patch"
+SRC_URI += "file://0001_atmel_v3.8.7_lorix_one_addition.patch"
 
 COMPATIBLE_MACHINE += '|sama5d4-lorix-one|sama5d4-lorix-one-sd'
 
