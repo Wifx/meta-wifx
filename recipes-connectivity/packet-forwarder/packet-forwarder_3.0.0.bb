@@ -37,11 +37,13 @@ do_install () {
 }
 
 pkg_postinst_${PN} () {
-#!/bin/bash
-if [ -z "$D" ]; then
+#!/bin/sh -e
+if [ x"$D" = "x" ]; then
 	# Update gateway ID based on the eth0 MAC address
 	/opt/lorix/utils/update_gwid.sh /opt/lorix/clouds/${BPN}/global_conf.json
 	/opt/lorix/utils/update_gwid.sh /opt/lorix/clouds/${BPN}/local_conf.json
+else
+	exit 1
 fi
 }
 
