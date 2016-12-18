@@ -260,10 +260,10 @@ index 0000000..ef66bfd
 +	};
 +};
 diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index 7c7c807..dedcb1b 100644
+index 3559f1a..c9ecccf 100644
 --- a/arch/arm/boot/dts/sama5d4.dtsi
 +++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -297,6 +297,7 @@
+@@ -288,6 +288,7 @@
  			reg = <	0x80000000 0x08000000	/* EBI CS3 */
  				0xfc05c070 0x00000490	/* SMC PMECC regs */
  				0xfc05c500 0x00000100	/* SMC PMECC Error Location regs */
@@ -271,10 +271,10 @@ index 7c7c807..dedcb1b 100644
  				>;
  			interrupts = <22 IRQ_TYPE_LEVEL_HIGH 6>;
  			atmel,nand-addr-offset = <21>;
-@@ -305,6 +306,7 @@
+@@ -295,6 +296,7 @@
+ 			atmel,nand-has-dma;
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_nand>;
- 			clocks = <&hsmc_clk>;
 +			atmel,pmecc-lookup-table-offset = <0x0 0x8000>;
  			status = "disabled";
  
@@ -495,26 +495,14 @@ index 0000000..05d72b3
 +CONFIG_CRC_CCITT=m
 +CONFIG_CRC_ITU_T=m
 +CONFIG_AVERAGE=y
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index e57fa0f..53bc7a6 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -1189,7 +1189,6 @@ drm_do_probe_ddc_edid(void *data, u8 *buf, unsigned int block, size_t len)
- 		 * DDC monitors.
- 		 */
- 		ret = i2c_transfer(adapter, &msgs[3 - xfers], xfers);
--		udelay(100);
- 
- 		if (ret == -ENXIO) {
- 			DRM_DEBUG_KMS("drm: skipping non-existent adapter %s\n",
 diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index 92c909e..0535375 100644
+index d0e7dfc..57b0760 100644
 --- a/drivers/spi/spidev.c
 +++ b/drivers/spi/spidev.c
-@@ -706,6 +706,7 @@ static struct class *spidev_class;
- #ifdef CONFIG_OF
+@@ -695,6 +695,7 @@ static struct class *spidev_class;
  static const struct of_device_id spidev_dt_ids[] = {
  	{ .compatible = "rohm,dh2228fv" },
+ 	{ .compatible = "lineartechnology,ltc2488" },
 +	{ .compatible = "spidev" },
  	{},
  };
