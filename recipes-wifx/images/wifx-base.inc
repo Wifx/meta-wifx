@@ -1,10 +1,6 @@
 IMAGE_FEATURES += "ssh-server-openssh package-management"
 
-TOOLCHAIN_HOST_TASK += ""
-
-TOOLCHAIN_TARGET_TASK += "\
-    openssl-dev \
-    "
+TOOLCHAIN_HOST_TASK_append = " golang-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 
 IMAGE_INSTALL = "\
     packagegroup-core-boot \
@@ -40,14 +36,16 @@ IMAGE_INSTALL = "\
     perl \
     reset-lgw \
     lora-gateway \
-    packet-forwarder \
     update-gwid \
+    packet-forwarder \
+    loriot \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     "
 
 inherit core-image
 
-INHERIT += "extrausers"
-
 # lorix4u encrypted password
-#EXTRA_USERS_PARAMS = "usermod -P 'lorix4u' root;"
+inherit extrausers
+#EXTRA_USERS_PARAMS = "\
+#    usermod -P 'lorix4u' root; \
+#    "
