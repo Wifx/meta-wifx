@@ -34,6 +34,7 @@ IMAGE_INSTALL = "\
     openssl-misc \
     ca-certificates \
     perl \
+    resolvconf \
     reset-lgw \
     lora-gateway \
     update-gwid \
