@@ -5,8 +5,8 @@
 # Required-Stop:     $local_fs
 # Should-Start:      
 # Should-Stop:       
-# Default-Start:     S
-# Default-Stop:      0 6
+# Default-Start:     S 01 2 3 4 5
+# Default-Stop:      0 6 1
 # Short-Description: Init the SX1301 reset pin
 ### END INIT INFO
 

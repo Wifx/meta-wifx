@@ -1,0 +1,70 @@
+#!/bin/sh -e
+### BEGIN INIT INFO
+# Provides:          loriot_gw
+# Required-Start:    reset_lgw mountvirtfs $local_fs $networking
+# Required-Stop:     $local_fs
+# Should-Start:      
+# Should-Stop:       
+# Default-Start:     S 2 3 4
+# Default-Stop:      0 6
+# Short-Description: LORIOT.io LoRaWAN Gateway
+# Description:       LoRaWAN gateway that controls the 
+#                    LoRa concentrator board
+#                    
+### END INIT INFO
+
+# PATH should only include /usr/* if it runs after the mountnfs.sh script
+PATH=/usr/sbin:/sbin:/bin:/usr/bin:/usr/local/bin
+DESC="loriot.io lorawan gateway"
+NAME=loriot-gw
+RUNDIR=/opt/lorix/clouds/loriot
+DAEMON=$RUNDIR/loriot-gw
+PIDFILE=/var/run/loriot-gw.pid
+OPTIONS="-f -i eth0"
+
+SCRIPTNAME=/etc/init.d/$NAME
+
+# Exit if the package is not installed
+[ -x "$DAEMON" ] || exit 0
+
+do_start()
+{
+	# Return
+	#   0 if daemon has been started
+	#   1 if daemon was already running
+	#   other if daemon could not be started or a failure occured
+	cd $RUNDIR
+	start-stop-daemon --start --quiet --background --pidfile $PIDFILE --make-pidfile --exec $DAEMON -- $OPTIONS
+}
+
+do_stop()
+{
+	# Return
+	#   0 if daemon has been stopped
+	#   1 if daemon was already stopped
+	#   other if daemon could not be stopped or a failure occurred
+	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --exec $DAEMON
+}
+
+case "$1" in
+  start)
+	do_start
+
+	;;
+  stop)
+	do_stop
+	;;
+  restart|force-reload)
+	$0 stop
+	$0 start
+	;;
+  status)
+	status_of_proc -p $PIDFILE $DAEMON $RSYSLOGD && exit 0 || exit $?
+	;;
+  *)
+	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload|status}" >&2
+	exit 3
+	;;
+esac
+
+:
