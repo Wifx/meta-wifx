@@ -4,7 +4,7 @@ DESCRIPTION = "LoRa SX1301 based gateway packet forwarder."
 LICENSE = "SEMTECH"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=22af7693d7b76ef0fc76161c4be76c45"
 
-KTAG = "v3.0.0"
+KTAG = "v3.1.0"
 SRC_URI = "git://github.com/Wifx/packet_forwarder.git;protocol=git;tag=${KTAG}"
 
 PR = "r1"
