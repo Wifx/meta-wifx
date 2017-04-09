@@ -1,25 +1,26 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          loriot-gw
-# Required-Start:
-# Required-Stop:     reset-lgw $local_fs 
-# Should-Start:
-# Should-Stop:
-# Default-Start:
+# Provides:          packet-forwarder-gw
+# Required-Start:    
+# Required-Stop:     $local_fs
+# Should-Start:      
+# Should-Stop:       
+# Default-Start:     
 # Default-Stop:      70 0 1 6
-# Short-Description: LORIOT.io LoRaWAN Gateway
+# Short-Description: Semtech packet-forwarder LoRaWAN Gateway
 # Description:       LoRaWAN gateway that controls the 
 #                    LoRa concentrator board
+#                    
 ### END INIT INFO
 
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
 PATH=/usr/sbin:/sbin:/bin:/usr/bin:/usr/local/bin
-DESC="loriot.io LoRaWAN gateway"
-NAME=loriot-gw
-RUNDIR=/opt/lorix/clouds/loriot
-DAEMON=$RUNDIR/$NAME
-PIDFILE=/var/run/$NAME.pid
-OPTIONS="-f -i eth0"
+DESC="Semtech packet-forwarder LoRaWAN gateway"
+NAME=packet-forwarder-gw
+RUNDIR=/opt/lorix/clouds/packet-forwarder
+DAEMON=$RUNDIR/lora_pkt_fwd
+PIDFILE=/var/run/packet-forwarder-gw.pid
+OPTIONS=""
 SCRIPTNAME=/etc/init.d/$NAME
 
 # Source init.d functions
@@ -49,7 +50,7 @@ do_stop()
 	#   1 if daemon was already stopped
 	#   other if daemon could not be stopped or a failure occurred
 	sudo start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --exec $DAEMON
-	ret=$?
+    ret=$?
     if (( $ret == 1 )); then
         echo "$DAEMON was not running"
 	elif ([ $? == 0 ] && [ -f $PIDFILE ]); then

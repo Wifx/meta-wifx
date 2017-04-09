@@ -1,4 +1,4 @@
-require wifx-base.bb
+require wifx-base-dbg.bb
 
 DESCRIPTION = "Image with LORIX One support that includes everything within \
 wifx-base-image plus meta-toolchain, development headers and libraries to \

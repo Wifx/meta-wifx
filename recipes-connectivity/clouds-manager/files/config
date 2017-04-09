@@ -1,0 +1,21 @@
+########################
+# 
+# LORIX One - clouds manager config file
+#
+# COMMENTS
+# Options:
+# cloud=
+#  loriot
+#  semtech
+# exemple:
+# cloud=loriot
+# autostart=
+#  true
+#  false
+# exemple:
+# autostart=true
+########################
+
+cloud=loriot
+
+autostart=true

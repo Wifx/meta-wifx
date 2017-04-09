@@ -1,12 +1,12 @@
 #!/bin/sh -e
 ### BEGIN INIT INFO
-# Provides:          reset_lgw
+# Provides:          reset-lgw
 # Required-Start:    mountvirtfs $local_fs $networking
 # Required-Stop:     $local_fs
 # Should-Start:      
 # Should-Stop:       
 # Default-Start:     S 01 2 3 4 5
-# Default-Stop:      0 6 1
+# Default-Stop:      81 0 1 6
 # Short-Description: Init the SX1301 reset pin
 ### END INIT INFO
 
@@ -34,12 +34,11 @@ iot_sk_init() {
 
 iot_sk_term() {
     # cleanup GPIOA1
-    if [ -d $SX1301_RST_PIN_PATH ]
-    then
+    if [ -d $SX1301_RST_PIN_PATH ]; then
         # set GPIOA1 as input (then do a reset with the external pull-up)
         echo "in" > $SX1301_RST_PIN_PATH/direction; wait_gpio
 
-	# unexport GPIOA1
+        # unexport GPIOA1
         echo $SX1301_RST_PIN > /sys/class/gpio/unexport; wait_gpio
     fi
 }
@@ -66,7 +65,7 @@ force-reload|restart)
 	;;
 
 *)
-	echo "Usage: /etc/init.d/reset_lgw {start|stop}"
+	echo "Usage: /etc/init.d/reset-lgw {start|stop|restart}"
 	exit 1
 	;;
 esac

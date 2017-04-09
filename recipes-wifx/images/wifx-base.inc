@@ -11,6 +11,7 @@ IMAGE_INSTALL = "\
     setserial \
     opkg \
     iperf \
+    nano \
     \
     nbench-byte \
     lmbench \
@@ -34,6 +35,20 @@ IMAGE_INSTALL = "\
     openssl-misc \
     ca-certificates \
     perl \
+    sudo \
+    \
+    python \
+    python-psutil \
+    python-netifaces \
+    python-ujson \
+    python-cryptography \
+    python-pyserial \
+    python-setuptools \
+    \
+    python3 \
+    python3-pip \
+    python3-setuptools \
+    \
     resolvconf \
     reset-lgw \
     lora-gateway \
@@ -45,8 +60,17 @@ IMAGE_INSTALL = "\
 
 inherit core-image
 
-# lorix4u encrypted password
 inherit extrausers
-#EXTRA_USERS_PARAMS = "\
-#    usermod -P 'lorix4u' root; \
-#    "
+
+# Add admin user in sudoers group
+update_sudoers(){
+    sed -i 's/# %sudo/%sudo/' ${IMAGE_ROOTFS}/etc/sudoers
+}
+ROOTFS_POSTPROCESS_COMMAND += "update_sudoers;"
+
+# Disable shell access for root and create the admin main user
+EXTRA_USERS_PARAMS = " \
+    usermod -s /bin/false root; \
+    useradd -p '\$1\$OrJYw4GK\$z39VfXDWPb0IENfzDr7GM.' admin; \
+    usermod -a -G sudo admin; \
+    "
