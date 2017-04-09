@@ -10,7 +10,7 @@ SRC_URI = " \
     file://init \
     "
 
-PR = "r2"
+PR = "r3"
 S = "${WORKDIR}/git"
 
 DEPENDS = "lora-gateway"
@@ -39,7 +39,10 @@ do_install () {
 	       ${D}/opt/lorix/utils
 
     install -m 0755 ${S}/lora_pkt_fwd/lora_pkt_fwd ${D}/opt/lorix/clouds/${BPN}
+
+    # configuration files
     install -m 0644 ${S}/lora_pkt_fwd/*.json ${D}/opt/lorix/clouds/${BPN}
+
     install -m 0755 ${S}/util_ack/util_ack ${D}/opt/lorix/clouds/${BPN}
     install -m 0755 ${S}/util_sink/util_sink ${D}/opt/lorix/clouds/${BPN}
     install -m 0755 ${S}/util_tx_test/util_tx_test ${D}/opt/lorix/clouds/${BPN}
@@ -73,6 +76,8 @@ pkg_postinst_${PN}_append () {
         # Update gateway ID based on the eth0 MAC address
         echo "Updating configuration files with gateway ID"
         /opt/lorix/utils/update_gwid.sh /opt/lorix/clouds/${BPN}/global_conf.json
+        /opt/lorix/utils/update_gwid.sh /opt/lorix/clouds/${BPN}/global_conf_2dBi_indoor.json
+        /opt/lorix/utils/update_gwid.sh /opt/lorix/clouds/${BPN}/global_conf_4dBi_outdoor.json
         /opt/lorix/utils/update_gwid.sh /opt/lorix/clouds/${BPN}/local_conf.json
 
         if [ -f "${RUNNING_FILE}" ]; then
