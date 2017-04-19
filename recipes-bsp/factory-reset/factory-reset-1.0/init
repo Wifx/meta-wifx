@@ -1,0 +1,100 @@
+#!/bin/sh -e
+### BEGIN INIT INFO
+# Provides:          factory-reset
+# Required-Start:
+# Required-Stop:
+# Should-Start:      
+# Should-Stop:       
+# Default-Start:     S 60
+# Default-Stop:
+# Short-Description:
+### END INIT INFO
+
+PATH="/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
+STATE_PATH="/sys/bus/i2c/devices/4-0060/boot_state"
+
+cp_if_exists () {
+    if [ -f $1 ]; then
+        echo "Copy file $1 to /etc/backup.d"
+        cp --parents $1 /etc/backup.d
+    fi
+}
+
+case "$1" in
+start)
+	if [ -f $STATE_PATH ]; then                                      
+        state=$(cat $STATE_PATH)                                 
+                                              
+        if [ $(cat $STATE_PATH) = "1" ]; then          
+            # cleaning factory reset order                
+            echo 1 > $STATE_PATH                       
+                                               
+            echo "LORIX One: factory reset detected..."
+            
+            echo "Running pre-reset scripts if any"
+	        for i in /etc/pre-reset.d/*
+	        do
+		        [ ! -f $i ] && continue
+		        
+		        # launch script
+		        . $i
+	        done
+	        
+            # copy backuped file to root
+            echo "Copying backup files back"
+            cd /etc/backup.d
+            cp -R ./ /
+            
+            echo "Running post-reset scripts if any"
+	        for i in /etc/post-reset.d/*
+	        do
+		        [ ! -f $i ] && continue
+		        
+		        # launch script
+		        . $i
+	        done
+	        echo "Backup done"
+        fi                                        
+    fi
+	;;
+copy)
+    # these file cannot be backuped during yocto image creation
+    # because the are created during the rootfs post installation
+    # process.
+    # we have to backup them during the first boot time
+    # other files (which are in a known state during yocto recipe
+    # baking) can be put in the backup.d directory directly by the
+    # concerned recipe (LoRa clouds applications for example)
+    
+    # test if file already installed 
+    if [ ! -f /etc/backup.d/bkp ]; then
+        # copy all files for backup
+        cp_if_exists /etc/passwd
+        cp_if_exists /etc/passwd-
+        cp_if_exists /etc/shadow
+        cp_if_exists /etc/shadow-
+        cp_if_exists /etc/group
+        cp_if_exists /etc/group-
+        cp_if_exists /etc/gshadow
+        cp_if_exists /etc/gshadow-
+        cp_if_exists /etc/sudoers
+        cp_if_exists /etc/fstab
+        cp_if_exists /etc/inittab
+        
+        # network
+        cp_if_exists /etc/network/interfaces
+        cp_if_exists /etc/init.d/networking
+        
+        # marked flag as backuped
+        touch /etc/backup.d/bkp
+    fi
+	;;
+
+*)
+	echo "Usage: /etc/init.d/factory-reset.sh {start|copy}"
+	exit 1
+	;;
+esac
+
+exit 0
+
