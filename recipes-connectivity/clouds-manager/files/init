@@ -1,68 +1,26 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          cloud-manager
+# Provides:          init-clouds-manager
 # Required-Start:    reset_lgw mountvirtfs $local_fs $networking
 # Required-Stop:     $local_fs
 # Should-Start:      
 # Should-Stop:       
-# Default-Start:     S 2 3 4 5
-# Default-Stop:      0 1 6
+# Default-Start:     02 S 2 3 4 5
+# Default-Stop:      71 0 1 6
 # Short-Description: 
 # Description:       
 #                    
 #                    
 ### END INIT INFO
 
-# PATH should only include /usr/* if it runs after the mountnfs.sh script
-PATH=/usr/sbin:/sbin:/bin:/usr/bin:/usr/local/bin
-DESC="LORIX One clouds manager"
-NAME=clouds-manager
-#PIDFILE=/var/run/loriot-gw.pid
-#OPTIONS="-f -i eth0"
+CALLED_FROM_INIT__=true
 
-SCRIPTNAME=/etc/init.d/$NAME
-CONFIGFILE_NAME=config
-CONFIGFILE=./$CONFIGFILE_NAME
+BASEDIR=$(dirname "$(readlink -f "$0")")
+SCRIPT=$BASEDIR/clouds-manager.sh
 
-load_config_file()
-{
-    echo "load_config_file()"
-    version=$(awk -F "=" '/cloud/ {print $2}' $CONFIGFILE) >/dev/null 2>&1
-    echo $version
-}
-
-do_start()
-{
-	echo "do_start() done"
-}
-
-do_stop()
-{
-	echo "do_stop() done"
-}
-
-case "$1" in
-  start)
-	do_start
-
-	;;
-  stop)
-	do_stop
-	;;
-  restart|force-reload)
-	$0 stop
-	$0 start
-	;;
-  parse)
-    load_config_file
-    ;;
-  status)
-	status_of_proc -p $PIDFILE $DAEMON $RSYSLOGD && exit 0 || exit $?
-	;;
-  *)
-	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload|status}" >&2
-	exit 3
-	;;
-esac
-
-:
+# call normal script
+if [ -f $SCRIPT ]; then
+    . $SCRIPT
+else
+    exit 1
+fi

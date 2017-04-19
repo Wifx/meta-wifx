@@ -24,13 +24,14 @@ IMAGE_INSTALL = "\
     dtc-misc \
     iproute2 \
     iptables \
+    resolvconf \
     bridge-utils \
     evtest \
-    \
     gdbserver \
     usbutils \
     wget \
     ntp \
+    \
     openssl \
     openssl-misc \
     ca-certificates \
@@ -49,17 +50,17 @@ IMAGE_INSTALL = "\
     python3-pip \
     python3-setuptools \
     \
-    resolvconf \
     reset-lgw \
+    factory-reset \
     lora-gateway \
     update-gwid \
     packet-forwarder \
     loriot \
+    clouds-manager \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     "
 
 inherit core-image
-
 inherit extrausers
 
 # Add admin user in sudoers group
@@ -70,7 +71,6 @@ ROOTFS_POSTPROCESS_COMMAND += "update_sudoers;"
 
 # Disable shell access for root and create the admin main user
 EXTRA_USERS_PARAMS = " \
-    usermod -s /bin/false root; \
     useradd -p '\$1\$OrJYw4GK\$z39VfXDWPb0IENfzDr7GM.' admin; \
     usermod -a -G sudo admin; \
     "

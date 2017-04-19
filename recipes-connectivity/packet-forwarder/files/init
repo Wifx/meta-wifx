@@ -2,7 +2,7 @@
 ### BEGIN INIT INFO
 # Provides:          packet-forwarder-gw
 # Required-Start:    
-# Required-Stop:     $local_fs
+# Required-Stop:     reset-lgw $local_fs
 # Should-Start:      
 # Should-Stop:       
 # Default-Start:     
@@ -19,7 +19,7 @@ DESC="Semtech packet-forwarder LoRaWAN gateway"
 NAME=packet-forwarder-gw
 RUNDIR=/opt/lorix/clouds/packet-forwarder
 DAEMON=$RUNDIR/lora_pkt_fwd
-PIDFILE=/var/run/packet-forwarder-gw.pid
+PIDFILE=/var/run/$NAME.pid
 OPTIONS=""
 SCRIPTNAME=/etc/init.d/$NAME
 
@@ -53,7 +53,7 @@ do_stop()
     ret=$?
     if (( $ret == 1 )); then
         echo "$DAEMON was not running"
-	elif ([ $? == 0 ] && [ -f $PIDFILE ]); then
+	elif [ $ret == 0 ] && [ -f $PIDFILE ]; then
 	    rm $PIDFILE
 	fi
 	return $ret

@@ -79,6 +79,12 @@ pkg_postinst_${PN}_append () {
         /opt/lorix/utils/update_gwid.sh /opt/lorix/clouds/${BPN}/global_conf_2dBi_indoor.json
         /opt/lorix/utils/update_gwid.sh /opt/lorix/clouds/${BPN}/global_conf_4dBi_outdoor.json
         /opt/lorix/utils/update_gwid.sh /opt/lorix/clouds/${BPN}/local_conf.json
+        
+        # Copy files to backup directory
+        if [ -d ${sysconfdir}/backup.d ]; then
+            # Copy with hierarchy but do not override
+            cp --parents -n /opt/lorix/clouds/${BPN}/*.json ${sysconfdir}/backup.d
+        fi
 
         if [ -f "${RUNNING_FILE}" ]; then
             echo "Restarting Semtech packet-forwarder cloud service"

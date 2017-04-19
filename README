@@ -104,11 +104,18 @@ DL_DIR ?= "your_download_directory_path"
 [...]
 PACKAGE_CLASSES ?= "package_ipk"
 [...]
+EXTRA_IMAGE_FEATURES ?= ""
+[...]
 USER_CLASSES ?= "buildstats image-mklibs"
 
 To get better performance, use the "poky-wifx" distribution by also adding that
 line:
 DISTRO = "poky-wifx"
+
+To get build history (use more space on disk), activate the option with this line
+in end of file:
+INHERIT += "buildhistory"
+BUILDHISTORY_COMMIT = "1"
 
 9/ Build Wifx standard image
 bitbake wifx-base-image
@@ -138,13 +145,17 @@ meta-multimedia   = "krogoth:55c8a76da5dc099a7bc3838495c672140cedb78e"
 meta-golang       = "master:72e26c77e91311e79f38863424adca9536a2bde6"
 meta-maker        = "master:c039fafa7a0276769d0928d16bdacd2012f2aff6"
 
-10/ Or build the devel image which contains also the toolchain and app headers
-bitbake wifx-base-image-dev
+10/ Or build the debug image which allow you for example to use the root user
+without password (don't use it in production)
+bitbake wifx-base-dbg
 
-11/ Or build the SDK image which contains in addition the kernel headers and debug utilities
-bitbake wifx-base-image-sdk
+11/ Or build the devel image which contains also the toolchain and app headers
+bitbake wifx-base-dev
 
-12/ In both cases, the toolchain installer is located in build-wifx/tmp/deploy/sdk
+12/ Or build the SDK image which contains in addition the kernel headers and debug utilities
+bitbake wifx-base-sdk
+
+13/ In both cases, the toolchain installer is located in build-wifx/tmp/deploy/sdk
 
 
 Maintainers:
