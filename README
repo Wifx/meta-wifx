@@ -155,7 +155,7 @@ bitbake wifx-base-dev
 12/ Or build the SDK image which contains in addition the kernel headers and debug utilities
 bitbake wifx-base-sdk
 
-13/ In both cases, the toolchain installer is located in build-wifx/tmp/deploy/sdk
+13/ In all cases, the toolchain installer is located in build-wifx/tmp/deploy/sdk
 
 
 Maintainers:
