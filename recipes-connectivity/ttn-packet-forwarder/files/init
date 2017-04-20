@@ -1,0 +1,85 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          ttn-gw
+# Required-Start:    
+# Required-Stop:     $local_fs
+# Should-Start:      
+# Should-Stop:       
+# Default-Start:     
+# Default-Stop:      70 0 1 6
+# Short-Description: Semtech packet-forwarder LoRaWAN Gateway modified for The Things Network
+# Description:       LoRaWAN gateway that controls the 
+#                    LoRa concentrator board
+#                    
+### END INIT INFO
+
+# PATH should only include /usr/* if it runs after the mountnfs.sh script
+PATH=/usr/sbin:/sbin:/bin:/usr/bin:/usr/local/bin
+DESC="Semtech packet-forwarder LoRaWAN gateway for The Things Network"
+NAME=ttn-gw
+RUNDIR=/opt/lorix/clouds/ttn
+DAEMON=$RUNDIR/poly_pkt_fwd
+PIDFILE=/var/run/$NAME.pid
+OPTIONS=""
+SCRIPTNAME=/etc/init.d/$NAME
+
+# Source init.d functions
+. /etc/init.d/functions
+
+# Exit if the package is not installed
+[ -x "$DAEMON" ] || exit 0
+
+do_start()
+{
+	# Return
+	#   0 if daemon has been started
+	#   1 if daemon was already running
+	#   other if daemon could not be started or a failure occured
+	sudo start-stop-daemon --start --quiet --background --pidfile $PIDFILE --make-pidfile --exec $DAEMON -- $OPTIONS
+	ret=$?
+	if (( $ret == 1 )); then
+	    echo "$DAEMON is already running"
+	fi
+	return $ret
+}
+
+do_stop()
+{
+	# Return
+	#   0 if daemon has been stopped
+	#   1 if daemon was already stopped
+	#   other if daemon could not be stopped or a failure occurred
+	sudo start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --exec $DAEMON
+    ret=$?
+    if (( $ret == 1 )); then
+        echo "$DAEMON was not running"
+	elif ([ $? == 0 ] && [ -f $PIDFILE ]); then
+	    rm $PIDFILE
+	fi
+	return $ret
+}
+
+case "$1" in
+  start)
+	do_start
+	exit $?
+	;;
+  stop)
+	do_stop
+	exit $?
+	;;
+  restart|force-reload)
+	$0 stop
+	$0 start
+	;;
+  status)
+    status $DAEMON && exit 0 || exit $?
+	;;
+  *)
+	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload|status}" >&2
+	exit 3
+	;;
+esac
+
+exit 0
+
