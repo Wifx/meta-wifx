@@ -8,6 +8,7 @@ KTAG = "v3.1.0"
 SRC_URI = " \
     git://github.com/Wifx/packet_forwarder.git;protocol=git;tag=${KTAG} \
     file://init \
+    file://post-backup.sh \
     "
 
 PR = "r3"
@@ -20,6 +21,10 @@ PACKAGES =+ "update-gwid"
 RPROVIDES_${PN} =+ "update-gwid"
 
 inherit update-rc.d
+
+RUNDIR="/opt/lorix/clouds/${BPN}"
+BKPDIR="${sysconfdir}/backup.d${RUNDIR}"
+POSTBKPDIR="${sysconfdir}/post-backup.d"
 
 INITSCRIPT_NAME = "packet-forwarder-gw"
 INITSCRIPT_PARAMS = "stop 70 0 1 6 ."
@@ -35,22 +40,27 @@ EXTRA_OEMAKE = " \
 	"
 
 do_install () {
-    install -d ${D}/opt/lorix/clouds/${BPN} \
-	       ${D}/opt/lorix/utils
+    install -d ${D}${RUNDIR} ${D}/opt/lorix/utils
 
-    install -m 0755 ${S}/lora_pkt_fwd/lora_pkt_fwd ${D}/opt/lorix/clouds/${BPN}
+    install -m 0755 ${S}/lora_pkt_fwd/lora_pkt_fwd ${D}${RUNDIR}
 
     # configuration files
-    install -m 0644 ${S}/lora_pkt_fwd/*.json ${D}/opt/lorix/clouds/${BPN}
+    install -m 0644 ${S}/lora_pkt_fwd/*.json ${D}${RUNDIR}
 
-    install -m 0755 ${S}/util_ack/util_ack ${D}/opt/lorix/clouds/${BPN}
-    install -m 0755 ${S}/util_sink/util_sink ${D}/opt/lorix/clouds/${BPN}
-    install -m 0755 ${S}/util_tx_test/util_tx_test ${D}/opt/lorix/clouds/${BPN}
+    install -m 0755 ${S}/util_ack/util_ack ${D}${RUNDIR}
+    install -m 0755 ${S}/util_sink/util_sink ${D}${RUNDIR}
+    install -m 0755 ${S}/util_tx_test/util_tx_test ${D}${RUNDIR}
     install -m 0755 ${S}/lora_pkt_fwd/update_gwid.sh ${D}/opt/lorix/utils
 
     # init script
     install -d ${D}${sysconfdir}/init.d
     install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${INITSCRIPT_NAME}
+
+    # backup management
+    install -d -m 0644 ${D}/${BKPDIR}
+    install -m 0644 ${S}/lora_pkt_fwd/*.json ${D}/${BKPDIR}
+    install -d -m 0644 ${D}/${POSTBKPDIR}
+    install -m 0755 ${WORKDIR}/post-backup.sh ${D}${POSTBKPDIR}/packet-forwarder-post-backup.sh
 }
 
 pkg_prerm_${PN}_prepend () {
@@ -75,17 +85,11 @@ pkg_postinst_${PN}_append () {
 
         # Update gateway ID based on the eth0 MAC address
         echo "Updating configuration files with gateway ID"
-        /opt/lorix/utils/update_gwid.sh /opt/lorix/clouds/${BPN}/global_conf.json
-        /opt/lorix/utils/update_gwid.sh /opt/lorix/clouds/${BPN}/global_conf_2dBi_indoor.json
-        /opt/lorix/utils/update_gwid.sh /opt/lorix/clouds/${BPN}/global_conf_4dBi_outdoor.json
-        /opt/lorix/utils/update_gwid.sh /opt/lorix/clouds/${BPN}/local_conf.json
+        /opt/lorix/utils/update_gwid.sh ${RUNDIR}/global_conf.json
+        /opt/lorix/utils/update_gwid.sh ${RUNDIR}/global_conf_2dBi_indoor.json
+        /opt/lorix/utils/update_gwid.sh ${RUNDIR}/global_conf_4dBi_outdoor.json
+        /opt/lorix/utils/update_gwid.sh ${RUNDIR}/local_conf.json
         
-        # Copy files to backup directory
-        if [ -d ${sysconfdir}/backup.d ]; then
-            # Copy with hierarchy but do not override
-            cp --parents -n /opt/lorix/clouds/${BPN}/*.json ${sysconfdir}/backup.d
-        fi
-
         if [ -f "${RUNNING_FILE}" ]; then
             echo "Restarting Semtech packet-forwarder cloud service"
             ${sysconfdir}/init.d/${INITSCRIPT_NAME} start
@@ -98,7 +102,10 @@ pkg_postinst_${PN}_append () {
 }
 
 FILES_${PN} = " \
-    /opt/lorix/clouds/${BPN}/* \
+    /opt/lorix/utils/* \
+    ${RUNDIR}/* \
+    ${BKPDIR}/*.json \
+    ${POSTBKPDIR}/* \
     ${sysconfdir}/init.d/${INITSCRIPT_NAME} \
     "
 

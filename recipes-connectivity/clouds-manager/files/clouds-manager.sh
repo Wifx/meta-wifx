@@ -8,6 +8,19 @@ SCRIPTNAME=/etc/init.d/$NAME
 CONFIGFILE_NAME=clouds.conf
 CONFIGFILE=/etc/lorix/$CONFIGFILE_NAME
 
+ask_sudo()
+{
+    sudo -nv 2> /dev/null
+    SUDOCREDCACHED=$?
+    if [ $SUDOCREDCACHED != 0 ] ; then 
+	    # acquire credentials
+        sudo -v
+        if [ $? != 0 ] ; then 
+            exit 1
+        fi
+    fi
+}
+
 param_exists() {
     awk '{ 
         if (match($0,"('$1')=[a-zA-Z0-9-]*$", a)) { 
@@ -29,14 +42,14 @@ read_param() {
 }
 
 replace_param () {
-    sed -i 's,^\('$1'[ ]*=\).*,\1'$2',g' $CONFIGFILE
+    sudo sed -i 's,^\('$1'[ ]*=\).*,\1'$2',g' $CONFIGFILE
 }
 
 write_param () {
     exists=$(param_exists $1)
     # if param not exists, append it at the end of the file
     if [ $exists = "false" ]; then
-        echo $1=$2 >> $CONFIGFILE
+        sudo echo $1=$2 >> $CONFIGFILE
     else
         replace_param $1 $2
     fi
@@ -52,7 +65,7 @@ do_start()
               exit 0
           fi
           echo -n "Starting cloud $cloud... "
-          $init_file start
+          sudo $init_file start
           ret=$?
           if [ $ret -eq 0 ]; then
               echo "done."
@@ -85,7 +98,7 @@ do_stop()
             ;;
         0)
             echo -n "Stopping cloud $cloud... "
-            $init_file stop
+            sudo $init_file stop
             ret=$?
             if [ $ret -eq 0 ]; then
                 echo "done."
@@ -182,11 +195,9 @@ do_configure()
  
         case $cloud in 
             loriot)
-                echo "loriot chosen"
                 break
                 ;;
             packet-forwarder)
-                echo "packet-forwarder chosen"
                 break
                 ;;
             *)
@@ -195,6 +206,10 @@ do_configure()
         esac
     done
     
+    echo ""
+    echo "New configuration:"
+    echo "  autostart=$autostart"
+    echo "      cloud=$cloud"
     echo ""
 
     write_param autostart $autostart
@@ -208,9 +223,11 @@ set_env
 
 case "$1" in
   start)
+    ask_sudo
 	do_start
 	;;
   stop)
+    ask_sudo
 	do_stop
 	;;
   restart|force-reload)
@@ -228,6 +245,7 @@ case "$1" in
     fi
 	;;
   configure)
+    do_sudo
     do_configure
     exit $?
     ;;

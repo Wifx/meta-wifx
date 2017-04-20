@@ -35,7 +35,7 @@ do_install () {
 	# init script
 	install -d ${D}${sysconfdir}/init.d
 	# base script file
-	install -m 0744 ${WORKDIR}/clouds-manager.sh ${D}${sysconfdir}/init.d/clouds-manager.sh \
+	install -m 0755 ${WORKDIR}/clouds-manager.sh ${D}${sysconfdir}/init.d/clouds-manager.sh \
 	# init wrapper
 	install -m 0744 ${WORKDIR}/init ${D}/${INITSCRIPT}
 	

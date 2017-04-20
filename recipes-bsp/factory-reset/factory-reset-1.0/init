@@ -32,28 +32,28 @@ start)
             echo "LORIX One: factory reset detected..."
             
             echo "Running pre-reset scripts if any"
-	        for i in /etc/pre-reset.d/*
-	        do
-		        [ ! -f $i ] && continue
-		        
-		        # launch script
-		        . $i
-	        done
-	        
+            for i in /etc/pre-backup.d/*
+            do
+                [ ! -f $i ] && continue
+
+                # launch script
+                . $i
+            done
+
             # copy backuped file to root
             echo "Copying backup files back"
             cd /etc/backup.d
             cp -R ./ /
-            
+
             echo "Running post-reset scripts if any"
-	        for i in /etc/post-reset.d/*
-	        do
-		        [ ! -f $i ] && continue
-		        
-		        # launch script
-		        . $i
-	        done
-	        echo "Backup done"
+            for i in /etc/post-backup.d/*
+            do
+                [ ! -f $i ] && continue
+
+                # launch script
+                . $i
+            done
+            echo "Backup done"
         fi                                        
     fi
 	;;
