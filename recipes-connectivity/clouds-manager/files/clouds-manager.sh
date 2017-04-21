@@ -222,37 +222,37 @@ do_configure()
 set_env
 
 case "$1" in
-  start)
-    ask_sudo
-	do_start
-	;;
-  stop)
-    ask_sudo
-	do_stop
-	;;
-  restart|force-reload)
-	$0 stop
-	$0 start
-	;;
-  status)
-    if [ -z $cloud ]; then
-        echo "Configured cloud parameter wrong or empty."
-        exit 1
-    else
-        echo "Cloud $cloud status:"
-        $init_file status
+    start)
+        ask_sudo
+        do_start
+        ;;
+    stop)
+        ask_sudo
+        do_stop
+        ;;
+    restart|force-reload)
+        $0 stop
+        $0 start
+        ;;
+    status)
+        if [ -z $cloud ]; then
+            echo "Configured cloud parameter wrong or empty."
+            exit 1
+        else
+            echo "Cloud $cloud status:"
+            $init_file status
+            exit $?
+        fi
+        ;;
+    configure)
+        ask_sudo
+        do_configure
         exit $?
-    fi
-	;;
-  configure)
-    do_sudo
-    do_configure
-    exit $?
-    ;;
-  *)
-	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload|status|configure}" >&2
-	exit 3
-	;;
+        ;;
+    *)
+        echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload|status|configure}" >&2
+        exit 3
+        ;;
 esac
 
 :
