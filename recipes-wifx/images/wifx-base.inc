@@ -1,6 +1,7 @@
 IMAGE_FEATURES += "ssh-server-openssh package-management"
 
 TOOLCHAIN_HOST_TASK_append = " golang-cross-canadian-${TRANSLATED_TARGET_ARCH}"
+EXTRA_OECONF_remove = "${DISABLE_STATIC}"
 
 IMAGE_INSTALL = "\
     packagegroup-core-boot \
