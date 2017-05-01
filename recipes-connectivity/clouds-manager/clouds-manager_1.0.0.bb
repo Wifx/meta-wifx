@@ -11,10 +11,10 @@ SRC_URI = " \
 	file://config \
 	"
 
-PR = "r0"
+PR = "r1"
 
 DEPENDS += ""
-RDEPENDS_${PN} += "reset-lgw packet-forwarder loriot "
+RDEPENDS_${PN} += "reset-lgw loriot packet-forwarder ttn-packet-forwarder "
 
 inherit update-rc.d
 
@@ -64,6 +64,25 @@ pkg_prerm_${PN}_prepend () {
             touch ${RUNNING_FILE}
         elif [ -f ${RUNNING_FILE} ]; then
             rm ${RUNNING_FILE} >/dev/null 2>&1
+        fi
+    fi
+}
+
+pkg_preinst_${PN}_append () {
+    #!/bin/sh
+    if [ x"$D" = "x" ]; then
+        # FIX bug with loriot init script
+        if [ -f /etc/init.d/loriot-gw ]; then
+            #if [[ $(sudo opkg list-installed |grep '^loriot - ') == *1.0.1-r1 ]]; then
+                sudo sed -i "/$(echo '\t')exit \$?/d" /etc/init.d/loriot-gw
+            #fi
+        fi
+
+        # FIX bug with packet-forwarder init script
+        if [ -f /etc/init.d/packet-forwarder-gw ]; then
+            #if [[ $(sudo opkg list-installed |grep '^packet-forwarder - ') == *3.1.0-r3 ]]; then
+                sudo sed -i "/$(echo '\t')exit \$?/d" /etc/init.d/packet-forwarder-gw
+            #fi
         fi
     fi
 }

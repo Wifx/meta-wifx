@@ -55,8 +55,9 @@ IMAGE_INSTALL = "\
     factory-reset \
     lora-gateway \
     update-gwid \
-    packet-forwarder \
     loriot \
+    packet-forwarder \
+    ttn-packet-forwarder \
     clouds-manager \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     "

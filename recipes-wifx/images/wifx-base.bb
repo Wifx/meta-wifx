@@ -1,7 +1,7 @@
 DESCRIPTION = "Image with LORIX One support."
 
 LICENSE = "MIT"
-PR = "r0"
+PR = "r1"
 
 require wifx-base.inc
 

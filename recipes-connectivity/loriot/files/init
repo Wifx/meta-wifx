@@ -52,7 +52,7 @@ do_stop()
 	ret=$?
     if (( $ret == 1 )); then
         echo "$DAEMON was not running"
-	elif [ $ret == 0 ] && [ -f $PIDFILE ]; then
+	elif [ $ret -eq 0 ] && [ -f $PIDFILE ]; then
 	    rm $PIDFILE
 	fi
 	return $ret
@@ -61,11 +61,9 @@ do_stop()
 case "$1" in
   start)
 	do_start
-	exit $?
 	;;
   stop)
 	do_stop
-	exit $?
 	;;
   restart|force-reload)
 	$0 stop

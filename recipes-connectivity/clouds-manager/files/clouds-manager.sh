@@ -132,6 +132,9 @@ set_env()
         packet-forwarder)
             init_file="/etc/init.d/packet-forwarder-gw"
             ;;
+        ttn)
+            init_file="/etc/init.d/ttn-gw"
+            ;;
         *)
             # clean cloud variable
             cloud=""
@@ -190,7 +193,7 @@ do_configure()
     # configure cloud
     while true; do
         echo "Which cloud app. do you want to use ?"
-        echo "[loriot|packet-forwarder]"
+        echo "[loriot|packet-forwarder|ttn]"
         read -p " > " cloud
  
         case $cloud in 
@@ -198,6 +201,9 @@ do_configure()
                 break
                 ;;
             packet-forwarder)
+                break
+                ;;
+            ttn)
                 break
                 ;;
             *)
@@ -255,4 +261,5 @@ case "$1" in
         ;;
 esac
 
-:
+exit 0
+

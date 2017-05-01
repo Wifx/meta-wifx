@@ -21,7 +21,7 @@ INITSCRIPT_PARAMS = "start 60 S ."
 
 do_install () {
 	install -d -m 755 ${D}${sysconfdir}/init.d
-	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${INITSCRIPT_NAME}
+	install -m 0700 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${INITSCRIPT_NAME}
 	
 	install -d -m 660 ${D}${sysconfdir}/pre-backup.d
 	install -d -m 660 ${D}${sysconfdir}/post-backup.d

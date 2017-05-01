@@ -11,7 +11,7 @@ SRC_URI = " \
     file://post-backup.sh \
     "
 
-PR = "r3"
+PR = "r4"
 S = "${WORKDIR}/git"
 
 DEPENDS = "lora-gateway"
