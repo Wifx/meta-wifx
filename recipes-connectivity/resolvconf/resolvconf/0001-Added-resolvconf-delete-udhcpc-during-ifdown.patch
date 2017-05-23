@@ -1,0 +1,22 @@
+From 8c7d6de4e69a911d1475b3e0bb39742ee8c6bdef Mon Sep 17 00:00:00 2001
+From: Yannick Lanz <yannick.lanz@gmail.com>
+Date: Sun, 14 May 2017 17:47:20 +0200
+Subject: [PATCH] Added resolvconf delete udhcpc during ifdown
+
+---
+ debian/resolvconf.resolvconf.if-down | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/debian/resolvconf.resolvconf.if-down b/debian/resolvconf.resolvconf.if-down
+index 66e3a9f..637a8bf 100755
+--- a/debian/resolvconf.resolvconf.if-down
++++ b/debian/resolvconf.resolvconf.if-down
+@@ -13,4 +13,5 @@ case "$ADDRFAM" in
+ esac
+ 
+ /sbin/resolvconf -d "${IFACE}.${ADDRFAM}" || :
++/sbin/resolvconf -d "${IFACE}.udhcpc" || :
+ 
+-- 
+2.7.4
+
