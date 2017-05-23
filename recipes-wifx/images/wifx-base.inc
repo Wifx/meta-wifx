@@ -36,8 +36,10 @@ IMAGE_INSTALL = "\
     openssl \
     openssl-misc \
     ca-certificates \
-    perl \
+    openvpn \
     sudo \
+    \
+    perl \
     \
     python \
     python-psutil \
