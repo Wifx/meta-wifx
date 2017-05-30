@@ -11,7 +11,7 @@ SRC_URI = " \
     file://post-backup.sh \
     "
 
-PR = "r0"
+PR = "r1"
 S = "${WORKDIR}/git"
 
 DEPENDS = "ttn-lora-gateway"

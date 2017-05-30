@@ -36,7 +36,6 @@ IMAGE_INSTALL = "\
     openssl \
     openssl-misc \
     ca-certificates \
-    openvpn \
     sudo \
     \
     perl \

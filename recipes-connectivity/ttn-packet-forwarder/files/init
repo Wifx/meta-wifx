@@ -31,54 +31,73 @@ SCRIPTNAME=/etc/init.d/$NAME
 
 do_start()
 {
-	# Return
-	#   0 if daemon has been started
-	#   1 if daemon was already running
-	#   other if daemon could not be started or a failure occured
-	cd $RUNDIR
-	sudo start-stop-daemon --start --quiet --background --pidfile $PIDFILE --make-pidfile --exec $DAEMON -- $OPTIONS
-	ret=$?
-	if (( $ret == 1 )); then
-	    echo "$DAEMON is already running"
-	fi
-	return $ret
+    # Restart SX1301 concentrator
+    sudo /etc/init.d/reset-lgw restart > /dev/null
+
+    # Return
+    #   0 if daemon has been started
+    #   1 if daemon was already running
+    #   other if daemon could not be started or a failure occured
+    cd $RUNDIR
+    sudo start-stop-daemon --start --quiet --background --pidfile $PIDFILE --make-pidfile --exec $DAEMON -- $OPTIONS
+    ret=$?
+    if (( $ret == 1 )); then
+        echo "$DAEMON is already running"
+    fi
+    return $ret
 }
 
 do_stop()
 {
-	# Return
-	#   0 if daemon has been stopped
-	#   1 if daemon was already stopped
-	#   other if daemon could not be stopped or a failure occurred
-	cd $RUNDIR
-	sudo start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --exec $DAEMON
+    # Return
+    #   0 if daemon has been stopped
+    #   1 if daemon was already stopped
+    #   other if daemon could not be stopped or a failure occurred
+    cd $RUNDIR
+    sudo start-stop-daemon --stop --verbose --signal TERM --pidfile $PIDFILE --exec $DAEMON
     ret=$?
+
+    $0 status > /dev/null
+    status=$?
+    timeout=0
+    until [ $status -ne 0 ] || [ $timeout -eq 10 ]; do
+        sleep 1
+        $0 status > /dev/null
+        status=$?
+        let timeout=timeout+1
+    done
+
+    if [ $status -eq 0 ]; then
+        echo "timeout during wait for stop"
+        sudo start-stop-daemon --stop --signal KILL --pidfile $PIDFILE --exec $DAEMON
+    fi
+
     if (( $ret == 1 )); then
         echo "$DAEMON was not running"
-	elif [ $ret -eq 0 ] && [ -f $PIDFILE ]; then
-	    rm $PIDFILE
-	fi
-	return $ret
+    elif [ $ret -eq 0 ] && [ -f $PIDFILE ]; then
+        rm $PIDFILE
+    fi
+    return $ret
 }
 
 case "$1" in
   start)
-	do_start
-	;;
+    do_start
+    ;;
   stop)
-	do_stop
-	;;
+    do_stop
+    ;;
   restart|force-reload)
-	$0 stop
-	$0 start
-	;;
+    $0 stop
+    $0 start
+    ;;
   status)
     status $DAEMON && exit 0 || exit $?
-	;;
+    ;;
   *)
-	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload|status}" >&2
-	exit 3
-	;;
+    echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload|status}" >&2
+    exit 3
+    ;;
 esac
 
 exit 0

@@ -10,7 +10,7 @@ SRC_URI = " \
 	file://init \
 	"
 
-PR = "r2"
+PR = "r3"
 S = "${WORKDIR}"
 
 RDEPENDS_${PN} += "libcrypto openssl reset-lgw"
