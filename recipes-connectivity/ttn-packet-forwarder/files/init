@@ -20,8 +20,13 @@ NAME=ttn-gw
 RUNDIR=/opt/lorix/clouds/ttn
 DAEMON=$RUNDIR/poly_pkt_fwd
 PIDFILE=/var/run/$NAME.pid
-OPTIONS=""
 SCRIPTNAME=/etc/init.d/$NAME
+LOGDIR=/var/log
+LOGFILE=$LOGDIR/ttn-gw.log
+OPTIONS=""
+# Uncomment the following line to enable TTN client app logging file
+# You can configure log rotation using the file /etc/logrotate.d/ttn-gw
+# OPTIONS="-l $LOGFILE"
 
 # Source init.d functions
 . /etc/init.d/functions

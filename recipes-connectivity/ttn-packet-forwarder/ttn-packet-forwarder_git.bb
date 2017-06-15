@@ -8,14 +8,15 @@ SRCREV = "${AUTOREV}"
 SRC_URI = " \
     git://github.com/Wifx/ttn_packet_forwarder.git;protocol=git \
     file://init \
+    file://logrotate \
     file://post-backup.sh \
     "
 
-PR = "r1"
+PR = "r2"
 S = "${WORKDIR}/git"
 
 DEPENDS = "ttn-lora-gateway"
-RDEPENDS_${PN} += "reset-lgw update-gwid"
+RDEPENDS_${PN} += "reset-lgw update-gwid logrotate"
 
 inherit update-rc.d
 
@@ -47,6 +48,10 @@ do_install () {
     # init script
     install -d ${D}${sysconfdir}/init.d
     install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${INITSCRIPT_NAME}
+
+    # log rotation
+    install -d -m 0755 ${D}/${sysconfdir}/logrotate.d
+    install -m 0644 ${WORKDIR}/logrotate ${D}${sysconfdir}/logrotate.d/ttn-gw
     
     # backup management
     install -d -m 0644 ${D}/${BKPDIR}
@@ -99,6 +104,7 @@ FILES_${PN} = " \
     ${RUNDIR}/* \
     ${BKPDIR}/*.json \
     ${POSTBKPDIR}/* \
+    ${sysconfdir}/logrotate.d/ttn-gw \
     ${sysconfdir}/init.d/${INITSCRIPT_NAME} \
     "
 
