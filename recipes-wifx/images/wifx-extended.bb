@@ -15,4 +15,5 @@ IMAGE_INSTALL += "\
     openvpn \
     traceroute \
     tunctl \
+    autossh \
     "
