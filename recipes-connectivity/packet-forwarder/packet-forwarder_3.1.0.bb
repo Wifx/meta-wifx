@@ -11,7 +11,7 @@ SRC_URI = " \
     file://post-backup.sh \
     "
 
-PR = "r5"
+PR = "r6"
 S = "${WORKDIR}/git"
 
 DEPENDS = "lora-gateway"
@@ -30,6 +30,8 @@ INITSCRIPT_NAME = "packet-forwarder-gw"
 INITSCRIPT_PARAMS = "stop 70 0 1 6 ."
 
 RUNNING_FILE = "/var/tmp/${INITSCRIPT_NAME}_is_running"
+
+TARGET_TYPE_FILE = "/sys/bus/i2c/devices/4-0060/product_type"
 
 EXTRA_OEMAKE = " \
 	'CC=${CC}' 'CFLAGS=${CFLAGS} \
@@ -76,6 +78,24 @@ pkg_prerm_${PN}_prepend () {
     else
         rm ${RUNNING_FILE} >/dev/null 2>&1
     fi
+
+    # Backuping configuration files
+    if [ -f ${RUNDIR}/global_conf.json ]; then
+        echo "Backuping global_conf.json file"
+        mv -f ${RUNDIR}/global_conf.json ${RUNDIR}/global_conf.json.bkp >/dev/null 2>&1
+    fi
+    if [ -f ${RUNDIR}/global_conf_2dBi_indoor.json ]; then
+        echo "Backuping global_conf_2dBi_indoor.json file"
+        mv -f ${RUNDIR}/global_conf_2dBi_indoor.json ${RUNDIR}/global_conf_2dBi_indoor.json.bkp >/dev/null 2>&1
+    fi
+    if [ -f ${RUNDIR}/global_conf_4dBi_outdoor.json ]; then
+        echo "Backuping global_conf_4dBi_outdoor.json file"
+        mv -f ${RUNDIR}/global_conf_4dBi_outdoor.json ${RUNDIR}/global_conf_4dBi_outdoor.json.bkp >/dev/null 2>&1
+    fi
+    if [ -f ${RUNDIR}/local_conf.json ]; then
+        echo "Backuping local_conf.json file"
+        mv -f ${RUNDIR}/local_conf.json ${RUNDIR}/local_conf.json.bkp >/dev/null 2>&1
+    fi
 }
 
 pkg_postinst_${PN}_append () {
@@ -83,8 +103,33 @@ pkg_postinst_${PN}_append () {
     if [ x"$D" = "x" ]; then
         # Script is executed during the runtime installation
 
+        if [ -f ${TARGET_TYPE_FILE} ]; then
+            TYPE=$(cat ${TARGET_TYPE_FILE})
+        else
+            echo "Error while detecting gateway type, default type to EU868"
+            TYPE="EU868"
+        fi
+
         # Update gateway ID based on the eth0 MAC address
-        echo "Updating configuration files with gateway ID"
+        echo "Updating configuration files with gateway ID, type $TYPE"
+
+        case $TYPE in
+            "EU868")
+            mv -f ${RUNDIR}/global_conf_EU868_2dBi_indoor.json ${RUNDIR}/global_conf_2dBi_indoor.json
+            mv -f ${RUNDIR}/global_conf_EU868_4dBi_outdoor.json ${RUNDIR}/global_conf_4dBi_outdoor.json
+            rm -f ${RUNDIR}/global_conf_US915_2dBi_indoor.json
+            rm -f ${RUNDIR}/global_conf_US915_4dBi_outdoor.json
+            ;;
+            "US915")
+            mv -f ${RUNDIR}/global_conf_US915_2dBi_indoor.json ${RUNDIR}/global_conf_2dBi_indoor.json
+            mv -f ${RUNDIR}/global_conf_US915_4dBi_outdoor.json ${RUNDIR}/global_conf_4dBi_outdoor.json
+            rm -f ${RUNDIR}/global_conf_EU868_2dBi_indoor.json
+            rm -f ${RUNDIR}/global_conf_EU868_4dBi_outdoor.json
+            ;;
+        esac
+
+        cp -f ${RUNDIR}/global_conf_2dBi_indoor.json ${RUNDIR}/global_conf.json
+
         /opt/lorix/utils/update_gwid.sh ${RUNDIR}/global_conf.json
         /opt/lorix/utils/update_gwid.sh ${RUNDIR}/global_conf_2dBi_indoor.json
         /opt/lorix/utils/update_gwid.sh ${RUNDIR}/global_conf_4dBi_outdoor.json
