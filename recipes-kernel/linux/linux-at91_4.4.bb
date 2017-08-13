@@ -11,7 +11,7 @@ RDEPENDS_kernel-base=""
 FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}-4.4:"
 
 PV = "4.4+git${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}/git"
 

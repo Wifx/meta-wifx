@@ -115,16 +115,16 @@ pkg_postinst_${PN}_append () {
 
         case $TYPE in
             "EU868")
-            mv -f ${RUNDIR}/global_conf_EU868_2dBi_indoor.json ${RUNDIR}/global_conf_2dBi_indoor.json
-            mv -f ${RUNDIR}/global_conf_EU868_4dBi_outdoor.json ${RUNDIR}/global_conf_4dBi_outdoor.json
-            rm -f ${RUNDIR}/global_conf_US915_2dBi_indoor.json
-            rm -f ${RUNDIR}/global_conf_US915_4dBi_outdoor.json
+            mv -f ${RUNDIR}/global_conf_EU868_2dBi_indoor.json ${RUNDIR}/global_conf_2dBi_indoor.json >/dev/null 2>&1
+            mv -f ${RUNDIR}/global_conf_EU868_4dBi_outdoor.json ${RUNDIR}/global_conf_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_US915_2dBi_indoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_US915_4dBi_outdoor.json >/dev/null 2>&1
             ;;
             "US915")
-            mv -f ${RUNDIR}/global_conf_US915_2dBi_indoor.json ${RUNDIR}/global_conf_2dBi_indoor.json
-            mv -f ${RUNDIR}/global_conf_US915_4dBi_outdoor.json ${RUNDIR}/global_conf_4dBi_outdoor.json
-            rm -f ${RUNDIR}/global_conf_EU868_2dBi_indoor.json
-            rm -f ${RUNDIR}/global_conf_EU868_4dBi_outdoor.json
+            mv -f ${RUNDIR}/global_conf_US915_2dBi_indoor.json ${RUNDIR}/global_conf_2dBi_indoor.json >/dev/null 2>&1
+            mv -f ${RUNDIR}/global_conf_US915_4dBi_outdoor.json ${RUNDIR}/global_conf_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_EU868_2dBi_indoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_EU868_4dBi_outdoor.json >/dev/null 2>&1
             ;;
         esac
 

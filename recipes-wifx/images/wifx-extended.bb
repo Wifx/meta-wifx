@@ -9,6 +9,7 @@ IMAGE_FEATURES += ""
 
 IMAGE_INSTALL += "\
     arptables \
+    ebtables \
     dnsmasq \
     iftop \
     net-snmp \
@@ -16,4 +17,7 @@ IMAGE_INSTALL += "\
     traceroute \
     tunctl \
     autossh \
+    tcpdump \
+    wireshark \
     "
+    

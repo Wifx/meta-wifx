@@ -12,7 +12,7 @@ SRC_URI = " \
     file://post-backup.sh \
     "
 
-PR = "r2"
+PR = "r3"
 S = "${WORKDIR}/git"
 
 DEPENDS = "ttn-lora-gateway"
@@ -62,8 +62,6 @@ do_install () {
 
 pkg_prerm_${PN}_prepend () {
     #!/bin/sh
-    
-    echo "pre rm script prepend"
 
     # test if service is running
     ${sysconfdir}/init.d/${INITSCRIPT_NAME} status >/dev/null 2>&1
@@ -74,6 +72,24 @@ pkg_prerm_${PN}_prepend () {
         ${sysconfdir}/init.d/${INITSCRIPT_NAME} stop
     else
         rm ${RUNNING_FILE} >/dev/null 2>&1
+    fi
+
+    # Backuping configuration files
+    if [ -f ${RUNDIR}/global_conf.json ]; then
+        echo "Backuping global_conf.json file"
+        mv -f ${RUNDIR}/global_conf.json ${RUNDIR}/global_conf.json.bkp >/dev/null 2>&1
+    fi
+    if [ -f ${RUNDIR}/EU_global_conf_2dBi_indoor.json ]; then
+        echo "Backuping EU_global_conf_2dBi_indoor.json file"
+        mv -f ${RUNDIR}/EU_global_conf_2dBi_indoor.json ${RUNDIR}/EU_global_conf_2dBi_indoor.json.bkp >/dev/null 2>&1
+    fi
+    if [ -f ${RUNDIR}/EU_global_conf_4dBi_outdoor.json ]; then
+        echo "Backuping EU_global_conf_4dBi_outdoor.json file"
+        mv -f ${RUNDIR}/EU_global_conf_4dBi_outdoor.json ${RUNDIR}/EU_global_conf_4dBi_outdoor.json.bkp >/dev/null 2>&1
+    fi
+    if [ -f ${RUNDIR}/local_conf.json ]; then
+        echo "Backuping local_conf.json file"
+        mv -f ${RUNDIR}/local_conf.json ${RUNDIR}/local_conf.json.bkp >/dev/null 2>&1
     fi
 }
 

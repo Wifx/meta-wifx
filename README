@@ -54,13 +54,13 @@ git clone git://github.com/Wifx/meta-golang.git golang/meta-golang -b master
 5/ Clone meta-maker layer with the proper branch ready
 git clone git://git.yoctoproject.org/meta-maker -b master
 
-5/ Enter the poky directory to configure the build system and start the build process
+6/ Enter the poky directory to configure the build system and start the build process
 cd poky
 
-6/ Initialize build directory
+7/ Initialize build directory
 source oe-init-build-env build-wifx
 
-7/ Add meta-atmel layer to bblayer configuration file
+8/ Add meta-atmel layer to bblayer configuration file
 vim conf/bblayers.conf
 
 # POKY_BBLAYERS_CONF_VERSION is increased each time build/conf/bblayers.conf
@@ -92,7 +92,7 @@ BBLAYERS_NON_REMOVABLE ?= " \
   ${BSPDIR}/poky/meta-poky \
   "
 
-8/ Edit local.conf to specify the machine, location of source archived, package type (rpm, deb or ipk)
+9/ Edit local.conf to specify the machine, location of source archived, package type (rpm, deb or ipk)
 Pick one MACHINE name from the "Supported SoCs / MACHINE names" chapter above
 and edit the "local.conf" file. Here is an example:
 
@@ -117,7 +117,7 @@ in end of file:
 INHERIT += "buildhistory"
 BUILDHISTORY_COMMIT = "1"
 
-9/ Build Wifx standard image
+10/ Build Wifx standard image
 bitbake wifx-base-image
 
 Typical bitbake output
@@ -145,17 +145,17 @@ meta-multimedia   = "krogoth:55c8a76da5dc099a7bc3838495c672140cedb78e"
 meta-golang       = "master:72e26c77e91311e79f38863424adca9536a2bde6"
 meta-maker        = "master:c039fafa7a0276769d0928d16bdacd2012f2aff6"
 
-10/ Or build the debug image which allow you for example to use the root user
+11/ Or build the debug image which allow you for example to use the root user
 without password (don't use it in production)
 bitbake wifx-base-dbg
 
-11/ Or build the devel image which contains also the toolchain and app headers
+12/ Or build the devel image which contains also the toolchain and app headers
 bitbake wifx-base-dev
 
-12/ Or build the SDK image which contains in addition the kernel headers and debug utilities
+13/ Or build the SDK image which contains in addition the kernel headers and debug utilities
 bitbake wifx-base-sdk
 
-13/ In all cases, the toolchain installer is located in build-wifx/tmp/deploy/sdk
+14/ In all cases, the toolchain installer is located in build-wifx/tmp/deploy/sdk
 
 
 Maintainers:
