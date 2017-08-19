@@ -60,6 +60,10 @@ cd poky
 7/ Initialize build directory
 source oe-init-build-env build-wifx
 
+In case of using the SD Card version next to the NAND one, an advice is to use two build
+directories, for example build-wifx and buils-wifx-sd to avoid recompiling every machine
+specific packages when swithing from one version to the other.
+
 8/ Add meta-atmel layer to bblayer configuration file
 vim conf/bblayers.conf
 
@@ -98,7 +102,11 @@ and edit the "local.conf" file. Here is an example:
 
 vim conf/local.conf
 [...]
+# LORIX One NAND memory based
 MACHINE ??= "sama5d4-lorix-one"
+or
+# LORIX One SD-Card memory based
+MACHINE ??= "sama5d4-lorix-one-sd"
 [...]
 DL_DIR ?= "your_download_directory_path"
 [...]
@@ -117,8 +125,12 @@ in end of file:
 INHERIT += "buildhistory"
 BUILDHISTORY_COMMIT = "1"
 
+To remove work files after the build system has finished and reduce the overall system
+size, activate the option with this line in end of file:
+INHERIT += "rm_work"
+
 10/ Build Wifx standard image
-bitbake wifx-base-image
+bitbake wifx-base
 
 Typical bitbake output
 ======================
@@ -145,17 +157,20 @@ meta-multimedia   = "krogoth:55c8a76da5dc099a7bc3838495c672140cedb78e"
 meta-golang       = "master:72e26c77e91311e79f38863424adca9536a2bde6"
 meta-maker        = "master:c039fafa7a0276769d0928d16bdacd2012f2aff6"
 
-11/ Or build the debug image which allow you for example to use the root user
+11/ Or build the more complete image include for example OpenVPN and other network features
+bitbake wifx-extended
+
+12/ Or build the debug image which allow you for example to use the root user
 without password (don't use it in production)
 bitbake wifx-base-dbg
 
-12/ Or build the devel image which contains also the toolchain and app headers
+13/ Or build the devel image which contains also the toolchain and app headers
 bitbake wifx-base-dev
 
-13/ Or build the SDK image which contains in addition the kernel headers and debug utilities
+14/ Or build the SDK image which contains in addition the kernel headers and debug utilities
 bitbake wifx-base-sdk
 
-14/ In all cases, the toolchain installer is located in build-wifx/tmp/deploy/sdk
+15/ In all cases, the toolchain installer is located in build-wifx/tmp/deploy/sdk
 
 
 Maintainers:
