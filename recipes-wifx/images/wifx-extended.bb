@@ -13,6 +13,7 @@ IMAGE_INSTALL += "\
     dnsmasq \
     iftop \
     net-snmp \
+    netcat \
     openvpn \
     traceroute \
     tunctl \

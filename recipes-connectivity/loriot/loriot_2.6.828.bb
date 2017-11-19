@@ -6,11 +6,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=63722c69679e7db558ef8786ac6de1b1"
 
 SRC_URI = " \
 	file://LICENSE \
-	file://loriot_lorix_one_SPI_${PV} \
+	file://loriot_lorix_one_SPI_2.6.828-JKS-EU-9 \
 	file://init \
 	"
 
-PR = "r3"
+PR = "r0"
 S = "${WORKDIR}"
 
 RDEPENDS_${PN} += "libcrypto openssl reset-lgw"
@@ -24,7 +24,7 @@ RUNNING_FILE = "/var/tmp/${INITSCRIPT_NAME}_is_running"
 
 do_install () {
 	install -d ${D}/opt/lorix/clouds/loriot
-	install -m 0755 ${WORKDIR}/loriot_lorix_one_SPI_${PV} ${D}/opt/lorix/clouds/loriot/loriot-gw
+	install -m 0755 ${WORKDIR}/loriot_lorix_one_SPI_2.6.828-JKS-EU-9 ${D}/opt/lorix/clouds/loriot/loriot-gw
 
 	# init script
 	install -d ${D}${sysconfdir}/init.d
@@ -66,4 +66,6 @@ FILES_${PN} =+ " \
     /opt/lorix/clouds/loriot/* \
     ${sysconfdir}/init.d/${INITSCRIPT_NAME} \
     "
+    
+INHIBIT_PACKAGE_STRIP = "1"
 

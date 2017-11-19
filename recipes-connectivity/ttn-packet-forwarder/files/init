@@ -25,7 +25,7 @@ LOGDIR=/var/log
 LOGFILE=$LOGDIR/ttn-gw.log
 OPTIONS=""
 # Uncomment the following line to enable TTN client app logging file
-# You can configure log rotation using the file /etc/logrotate.d/ttn-gw
+# You can configure log rotation using the file /etc/logrotate.d/ttn-gw.log
 # OPTIONS="-l $LOGFILE"
 
 # Source init.d functions

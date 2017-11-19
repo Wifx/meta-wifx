@@ -15,6 +15,7 @@
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
 PATH=/usr/sbin:/sbin:/bin:/usr/bin:/usr/local/bin
 DESC="loriot.io LoRaWAN gateway"
+
 NAME=loriot-gw
 RUNDIR=/opt/lorix/clouds/loriot
 DAEMON=$RUNDIR/$NAME
