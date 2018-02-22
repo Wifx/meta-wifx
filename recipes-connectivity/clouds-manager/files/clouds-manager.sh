@@ -72,7 +72,7 @@ do_start()
           else
               echo "fail."
           fi
-          exit $ret
+          return $ret
           ;;
       1) 
           echo "Unknown cloud $cloud, abort."
@@ -84,7 +84,7 @@ do_start()
           echo "Unknown error, abort."
           ;;
     esac
-    exit $run
+    return $run
 }
 
 do_stop()
@@ -105,13 +105,13 @@ do_stop()
             else
                 echo "fail."
             fi
-            exit $ret
+            return $ret
             ;;
         *)
             echo "Unknown error, abort."
             ;;
     esac
-    exit $run
+    return $run
 }
 
 set_env()
