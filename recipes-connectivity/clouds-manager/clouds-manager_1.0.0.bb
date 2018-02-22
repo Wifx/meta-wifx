@@ -11,7 +11,7 @@ SRC_URI = " \
 	file://config \
 	"
 
-PR = "r1"
+PR = "r2"
 
 DEPENDS += ""
 RDEPENDS_${PN} += "reset-lgw loriot packet-forwarder ttn-packet-forwarder "
@@ -27,7 +27,7 @@ BKPFILE="${BKPDIR}/${CONFIGFILE_NAME}"
 
 INITSCRIPT_NAME = "init-clouds-manager"
 INITSCRIPT = "${sysconfdir}/init.d/${INITSCRIPT_NAME}"
-INITSCRIPT_PARAMS = "start 02 S 2 3 4 5 . stop 71 0 1 6 ."
+INITSCRIPT_PARAMS = "start 02 2 3 4 5 . stop 71 0 1 6 ."
 
 RUNNING_FILE = "/var/tmp/${INITSCRIPT_NAME}_is_running"
 
