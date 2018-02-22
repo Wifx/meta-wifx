@@ -11,7 +11,7 @@ SRC_URI = " \
 	file://config \
 	"
 
-PR = "r2"
+PR = "r3"
 
 DEPENDS += ""
 RDEPENDS_${PN} += "reset-lgw loriot packet-forwarder ttn-packet-forwarder "
