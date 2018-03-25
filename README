@@ -52,7 +52,10 @@ git clone git://github.com/Wifx/meta-wifx.git -b krogoth
 git clone git://github.com/Wifx/meta-golang.git golang/meta-golang -b master
 
 5/ Clone meta-maker layer with the proper branch ready
-git clone git://git.yoctoproject.org/meta-maker -b master
+git clone git://git.yoctoproject.org/meta-maker
+cd meta-maker
+git reset --hard c039fafa7a0276769d0928d16bdacd2012f2aff6
+cd ..
 
 6/ Enter the poky directory to configure the build system and start the build process
 cd poky
