@@ -1,0 +1,17 @@
+# Log rotation for the Semtech client application
+# Rotate every day
+# Or on a maximal log size of 1M
+# Keep only 10 rotations
+# And compress last file (compress) on the next rotation (delaycompress)
+
+/var/log/packet-forwarder-gw.log {
+	daily
+	size 1M
+	rotate 10
+	compress
+	delaycompress
+	missingok
+	notifempty
+	create 644 root root
+}
+

@@ -1,0 +1,9 @@
+Wifx LORIX One - Semtech packet-forwarder adaptation
+====================================================
+
+Status:         STABLE
+Version:        3.1.0r8
+Sources:        https://github.com/Wifx/packet_forwarder
+Forked from:    https://github.com/Lora-net/packet_forwarder
+Launch script:  /etc/init.d/packet-forwarder-gw
+

@@ -8,12 +8,13 @@ SRC_URI = " \
 	file://LICENSE \
 	file://loriot_lorix_one_SPI_2.8.870-JKS-EU-1 \
 	file://init \
+    file://logrotate \
 	"
 
-PR = "r0"
+PR = "r1"
 S = "${WORKDIR}"
 
-RDEPENDS_${PN} += "libcrypto openssl reset-lgw"
+RDEPENDS_${PN} += "libcrypto openssl reset-lgw start-stop-daemon-ext logrotate"
 
 inherit update-rc.d
 
@@ -29,6 +30,10 @@ do_install () {
 	# init script
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${INITSCRIPT_NAME}
+	
+	# log rotation
+    install -d -m 0755 ${D}/${sysconfdir}/logrotate.d
+    install -m 0644 ${WORKDIR}/logrotate ${D}${sysconfdir}/logrotate.d/${INITSCRIPT_NAME}
 }
 
 pkg_prerm_${PN}_prepend () {
@@ -64,6 +69,7 @@ pkg_postinst_${PN}_append () {
 
 FILES_${PN} =+ " \
     /opt/lorix/clouds/loriot/* \
+    ${sysconfdir}/logrotate.d/${INITSCRIPT_NAME} \
     ${sysconfdir}/init.d/${INITSCRIPT_NAME} \
     "
     

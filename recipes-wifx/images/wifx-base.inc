@@ -13,6 +13,7 @@ IMAGE_INSTALL = "\
     opkg \
     iperf \
     nano \
+    start-stop-daemon-ext \
     \
     nbench-byte \
     lmbench \
@@ -59,6 +60,7 @@ IMAGE_INSTALL = "\
     loriot \
     packet-forwarder \
     ttn-packet-forwarder \
+    kersing-packet-forwarder \
     clouds-manager \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     "

@@ -1,0 +1,9 @@
+Wifx LORIX One - TTN packet-forwarder adaptation
+====================================================
+
+Status:         STABLE
+Version:        2.1.0r5
+Sources:        https://github.com/Wifx/ttn_packet_forwarder
+Forked from:    https://github.com/TheThingsNetwork/packet_forwarder
+Launch script:  /etc/init.d/ttn-gw
+

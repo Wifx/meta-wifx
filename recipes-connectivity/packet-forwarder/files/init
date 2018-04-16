@@ -17,47 +17,79 @@
 PATH=/usr/sbin:/sbin:/bin:/usr/bin:/usr/local/bin
 DESC="Semtech packet-forwarder LoRaWAN gateway"
 NAME=packet-forwarder-gw
+SCRIPTNAME=/etc/init.d/$NAME
 RUNDIR=/opt/lorix/clouds/packet-forwarder
 DAEMON=$RUNDIR/lora_pkt_fwd
 PIDFILE=/var/run/$NAME.pid
 OPTIONS=""
-SCRIPTNAME=/etc/init.d/$NAME
+LOGDIR=/var/log
+
+# Uncomment the following line to enable output logging file
+# You can configure log rotation using the file /etc/logrotate.d/packet-forwarder-gw.log
+#LOGFILE=$LOGDIR/packet-forwarder-gw.log
 
 # Source init.d functions
 . /etc/init.d/functions
 
 # Exit if the package is not installed
-[ -x "$DAEMON" ] || exit 0
+if [ ! -x "$DAEMON" ]; then
+    echo "Daemon $DAEMON does not exist, exiting..."
+    exit 0
+fi
 
+# Return
+#   0 if daemon has been started
+#   1 if daemon was already running
+#   other if daemon could not be started or a failure occured
 do_start()
 {
+    # Test actual status and quit if already running
+    $0 status > /dev/null 2>&1
+    ret=$?
+    if (( $ret == 0 )); then
+        echo "$DAEMON is already running"
+        return 1
+    fi
+    
     # Restart SX1301 concentrator
     sudo /etc/init.d/reset-lgw restart > /dev/null
 
-    # Return
-    #   0 if daemon has been started
-    #   1 if daemon was already running
-    #   other if daemon could not be started or a failure occured
-    cd $RUNDIR
-    sudo start-stop-daemon --start --quiet --background --pidfile $PIDFILE --make-pidfile --exec $DAEMON -- $OPTIONS
+    # Manage logfile
+    if [ -n "$LOGFILE" ] && [ ! -f "$LOGFILE" ]; then        
+        # Logfile doesn't exist, try to create it            
+        touch $LOGFILE > /dev/null 2>&1                      
+    fi
+    if [ -n "$LOGFILE" ] && [ -w "$LOGFILE" ]; then
+        # Launch the forwarder and enable output to logfile
+        COMMAND="exec stdbuf -oL -eL $DAEMON $OPTIONS > $LOGFILE 2>&1"
+    else
+        # Launch the forwarder without logfile
+        COMMAND="exec $DAEMON $OPTIONS"
+    fi
+    
+    # Launch command
+    sudo start-stop-daemon-ext --start --quiet --background --make-pidfile \
+    --pidfile $PIDFILE --chdir $RUNDIR --startas /bin/bash -- -c "$COMMAND"
+        
+    $0 status > /dev/null 2>&1
     ret=$?
-    if (( $ret == 1 )); then
-        echo "$DAEMON is already running"
+    if (( $ret != 0 )); then
+        echo "Error during launch of $DAEMON, not started"
     fi
     return $ret
 }
 
+# Return
+#   0 if daemon has been stopped
+#   1 if daemon was already stopped
+#   other if daemon could not be stopped or a failure occurred
 do_stop()
 {
-    # Return
-    #   0 if daemon has been stopped
-    #   1 if daemon was already stopped
-    #   other if daemon could not be stopped or a failure occurred
     cd $RUNDIR
-    sudo start-stop-daemon --stop --verbose --signal TERM --pidfile $PIDFILE --exec $DAEMON
+    sudo start-stop-daemon --stop --verbose --signal TERM --pidfile $PIDFILE --exec $DAEMON >/dev/null 2>&1
     ret=$?
 
-    $0 status > /dev/null
+    $0 status >/dev/null 2>&1
     status=$?
     timeout=0
     until [ $status -ne 0 ] || [ $timeout -eq 10 ]; do

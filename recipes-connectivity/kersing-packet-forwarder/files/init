@@ -1,31 +1,32 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          loriot-gw
-# Required-Start:
-# Required-Stop:     reset-lgw $local_fs 
-# Should-Start:
-# Should-Stop:
-# Default-Start:
+# Provides:          mp-pkt-fwd-gw
+# Required-Start:    
+# Required-Stop:     reset-lgw $local_fs
+# Should-Start:      
+# Should-Stop:       
+# Default-Start:     
 # Default-Stop:      70 0 1 6
-# Short-Description: LORIOT.io LoRaWAN Gateway
+# Short-Description: Kersing packet-forwarder LoRaWAN Gateway
 # Description:       LoRaWAN gateway that controls the 
 #                    LoRa concentrator board
+#                    
 ### END INIT INFO
 
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
 PATH=/usr/sbin:/sbin:/bin:/usr/bin:/usr/local/bin
-DESC="loriot.io LoRaWAN gateway"
-NAME=loriot-gw
+DESC="Multiple packet-forwarder LoRaWAN gateway"
+NAME=mp-pkt-fwd-gw
 SCRIPTNAME=/etc/init.d/$NAME
-RUNDIR=/opt/lorix/clouds/loriot
-DAEMON=$RUNDIR/$NAME
+RUNDIR=/opt/lorix/clouds/mp-pkt-fwd
+DAEMON=$RUNDIR/mp_pkt_fwd
 PIDFILE=/var/run/$NAME.pid
-OPTIONS="-f -i eth0"
+OPTIONS=""
 LOGDIR=/var/log
 
 # Uncomment the following line to enable output logging file
-# You can configure log rotation using the file /etc/logrotate.d/loriot-gw.log
-#LOGFILE=$LOGDIR/loriot-gw.log
+# You can configure log rotation using the file /etc/logrotate.d/mp-gw.log
+#LOGFILE=$LOGDIR/mp-gw.log
 
 # Source init.d functions
 . /etc/init.d/functions
@@ -36,10 +37,6 @@ if [ ! -x "$DAEMON" ]; then
     exit 0
 fi
 
-# Return
-#   0 if daemon has been started
-#   1 if daemon was already running
-#   other if daemon could not be started or a failure occured
 do_start()
 {
     # Test actual status and quit if already running
@@ -88,7 +85,7 @@ do_stop()
     sudo start-stop-daemon --stop --verbose --signal TERM --pidfile $PIDFILE --exec $DAEMON >/dev/null 2>&1
     ret=$?
 
-    $0 status >/dev/null 2>&1
+    $0 status > /dev/null 2>&1
     status=$?
     timeout=0
     until [ $status -ne 0 ] || [ $timeout -eq 10 ]; do

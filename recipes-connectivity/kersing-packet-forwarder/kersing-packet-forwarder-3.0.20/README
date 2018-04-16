@@ -1,0 +1,9 @@
+Wifx LORIX One - Kersing packet-forwarder adaptation
+====================================================
+
+Status:         DEVELOPMENT
+Version:        3.0.20r0
+Sources:        https://github.com/Wifx/mp_packet_forwarder
+Forked from:    https://github.com/kersing/packet_forwarder
+Launch script:  /etc/init.d/mp-pkt-fwd-gw
+
