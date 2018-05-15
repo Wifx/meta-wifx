@@ -5,21 +5,25 @@
 
 ## Sources
 
--   meta-wifx URI: git://github.com/Wifx/meta-wifx.git URI:
-    https://github.com/Wifx/meta-wifx.git Branch: krogoth
+-   meta-wifx URI: git://github.com/Wifx/meta-wifx.git\
+    URI: https://github.com/Wifx/meta-wifx.git \
+    Branch: krogoth
 
 ## Dependencies
 
 This Layer depends on :
 
--   meta-openembedded URI: git://git.openembedded.org/meta-openembedded URI:
-    http://cgit.openembedded.org/meta-openembedded/ Branch: krogoth
+-   meta-openembedded URI: git://git.openembedded.org/meta-openembedded\
+    URI: http://cgit.openembedded.org/meta-openembedded/\
+    Branch: krogoth
 
--   meta-golang URI: git://github.com/Wifx/meta-golang.git URI:
-    https://github.com/Wifx/meta-golang.git Branch: master
+-   meta-golang URI: git://github.com/Wifx/meta-golang.git\
+    URI: https://github.com/Wifx/meta-golang.git\
+    Branch: master
 
--   meta-maker URI: git://git.yoctoproject.org/meta-maker URI:
-    https://git.yoctoproject.org/git/meta-maker Branch: master
+-   meta-maker URI: git://git.yoctoproject.org/meta-maker\
+    URI: https://git.yoctoproject.org/git/meta-maker\
+    Branch: master
 
 ## Build procedure
 
@@ -41,7 +45,8 @@ This Layer depends on :
 
 2.  Create a directory
     ```
-    mkdir my_dir cd my_dir
+    mkdir my_dir
+    cd my_dir
     ```
 
 3.  Clone yocto/poky git repository with the proper branch ready
@@ -96,33 +101,32 @@ the other.
     ```
     # POKY_BBLAYERS_CONF_VERSION is increased each time build/conf/bblayers.conf
     # changes incompatibly
-
     POKY_BBLAYERS_CONF_VERSION = "2"
 
-    BBPATH = "\${TOPDIR}" BBFILES ?= ""
+    BBPATH = "${TOPDIR}"
+    BBFILES ?= ""
 
-    BSPDIR := "\${@os.path.abspath(os.path.dirname(d.getVar('FILE', True)) +
-    '/../../..')}"
+    BSPDIR := "${@os.path.abspath(os.path.dirname(d.getVar('FILE', True)) + '/../../..')}"
 
-    BBLAYERS ?= "  
-    \${BSPDIR}/meta-wifx  
-    \${BSPDIR}/poky/meta  
-    \${BSPDIR}/poky/meta-poky  
-    \${BSPDIR}/poky/meta-yocto-bsp  
-    \${BSPDIR}/meta-openembedded/meta-oe  
-    \${BSPDIR}/meta-openembedded/meta-networking  
-    \${BSPDIR}/meta-openembedded/meta-perl  
-    \${BSPDIR}/meta-openembedded/meta-python  
-    \${BSPDIR}/meta-openembedded/meta-ruby  
-    \${BSPDIR}/meta-openembedded/meta-multimedia  
-    \${BSPDIR}/golang/meta-golang  
-    \${BSPDIR}/meta-maker  
-    "
+    BBLAYERS ?= " \
+      ${BSPDIR}/meta-wifx \
+      ${BSPDIR}/poky/meta \
+      ${BSPDIR}/poky/meta-poky \
+      ${BSPDIR}/poky/meta-yocto-bsp \
+      ${BSPDIR}/meta-openembedded/meta-oe \
+      ${BSPDIR}/meta-openembedded/meta-networking \
+      ${BSPDIR}/meta-openembedded/meta-perl \
+      ${BSPDIR}/meta-openembedded/meta-python \
+      ${BSPDIR}/meta-openembedded/meta-ruby \
+      ${BSPDIR}/meta-openembedded/meta-multimedia \
+      ${BSPDIR}/golang/meta-golang \
+      ${BSPDIR}/meta-maker \
+      "
 
-    BBLAYERS_NON_REMOVABLE ?= "  
-    \${BSPDIR}/poky/meta  
-    \${BSPDIR}/poky/meta-poky  
-    "
+    BBLAYERS_NON_REMOVABLE ?= " \
+      ${BSPDIR}/poky/meta \
+      ${BSPDIR}/poky/meta-poky \
+      "
     ```
 
 11. Edit local.conf to specify the machine, location of source archived, package
