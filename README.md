@@ -5,7 +5,7 @@
 
 ## Sources
 
--   meta-wifx URI: git://github.com/Wifx/meta-wifx.git\
+-   meta-wifx URI: git://github.com/Wifx/meta-wifx.git \
     URI: https://github.com/Wifx/meta-wifx.git \
     Branch: krogoth
 
@@ -13,16 +13,16 @@
 
 This Layer depends on :
 
--   meta-openembedded URI: git://git.openembedded.org/meta-openembedded\
-    URI: http://cgit.openembedded.org/meta-openembedded/\
+-   meta-openembedded URI: git://git.openembedded.org/meta-openembedded \
+    URI: http://cgit.openembedded.org/meta-openembedded/ \
     Branch: krogoth
 
--   meta-golang URI: git://github.com/Wifx/meta-golang.git\
-    URI: https://github.com/Wifx/meta-golang.git\
+-   meta-golang URI: git://github.com/Wifx/meta-golang.git \
+    URI: https://github.com/Wifx/meta-golang.git \
     Branch: master
 
--   meta-maker URI: git://git.yoctoproject.org/meta-maker\
-    URI: https://git.yoctoproject.org/git/meta-maker\
+-   meta-maker URI: git://git.yoctoproject.org/meta-maker \
+    URI: https://git.yoctoproject.org/git/meta-maker \
     Branch: master
 
 ## Build procedure
