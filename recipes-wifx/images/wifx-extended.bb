@@ -20,5 +20,8 @@ IMAGE_INSTALL += "\
     autossh \
     tcpdump \
     wireshark \
+    nginx \
+    monkey \
+    lighttpd \
     "
     

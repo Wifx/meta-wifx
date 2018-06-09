@@ -115,6 +115,7 @@ the other.
       ${BSPDIR}/poky/meta-yocto-bsp \
       ${BSPDIR}/meta-openembedded/meta-oe \
       ${BSPDIR}/meta-openembedded/meta-networking \
+      ${BSPDIR}/meta-openembedded/meta-webserver \
       ${BSPDIR}/meta-openembedded/meta-perl \
       ${BSPDIR}/meta-openembedded/meta-python \
       ${BSPDIR}/meta-openembedded/meta-ruby \
@@ -128,6 +129,7 @@ the other.
       ${BSPDIR}/poky/meta-poky \
       "
     ```
+> **Note:** meta-webserver is only used for the wifx-extended image which contains optional web servers and can be omitted if not needed.
 
 11. Edit local.conf to specify the machine, location of source archived, package
 type (rpm, deb or ipk).\
