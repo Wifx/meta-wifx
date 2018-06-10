@@ -8,6 +8,18 @@ require wifx-base.bb
 IMAGE_FEATURES += ""
 
 IMAGE_INSTALL += "\
+    python \
+    python-psutil \
+    python-netifaces \
+    python-ujson \
+    python-cryptography \
+    python-pyserial \
+    python-setuptools \
+    \
+    python3 \
+    python3-pip \
+    python3-setuptools \
+    \
     arptables \
     ebtables \
     dnsmasq \

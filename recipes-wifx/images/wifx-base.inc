@@ -41,18 +41,6 @@ IMAGE_INSTALL = "\
     \
     perl \
     \
-    python \
-    python-psutil \
-    python-netifaces \
-    python-ujson \
-    python-cryptography \
-    python-pyserial \
-    python-setuptools \
-    \
-    python3 \
-    python3-pip \
-    python3-setuptools \
-    \
     reset-lgw \
     factory-reset \
     lora-gateway \
