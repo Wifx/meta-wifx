@@ -15,10 +15,12 @@ SRC_URI = " \
     file://configs/global_conf_EU868_4dBi_outdoor.json \
     file://configs/global_conf_US915_2dBi_indoor.json \
     file://configs/global_conf_US915_4dBi_outdoor.json \
+    file://configs/global_conf_AU915_2dBi_indoor.json \
+    file://configs/global_conf_AU915_4dBi_outdoor.json \
     file://configs/local_conf.json \        
     "
 
-PR = "r0"
+PR = "r1"
 S = "${WORKDIR}"
 
 RDEPENDS_${PN} += "openssl reset-lgw update-gwid start-stop-daemon-ext logrotate"
@@ -128,12 +130,24 @@ pkg_postinst_${PN}_append () {
             mv -f ${RUNDIR}/global_conf_EU868_4dBi_outdoor.json ${RUNDIR}/global_conf_4dBi_outdoor.json >/dev/null 2>&1
             rm -f ${RUNDIR}/global_conf_US915_2dBi_indoor.json >/dev/null 2>&1
             rm -f ${RUNDIR}/global_conf_US915_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_AU915_2dBi_indoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_AU915_4dBi_outdoor.json >/dev/null 2>&1
             ;;
             "US915")
             mv -f ${RUNDIR}/global_conf_US915_2dBi_indoor.json ${RUNDIR}/global_conf_2dBi_indoor.json >/dev/null 2>&1
             mv -f ${RUNDIR}/global_conf_US915_4dBi_outdoor.json ${RUNDIR}/global_conf_4dBi_outdoor.json >/dev/null 2>&1
             rm -f ${RUNDIR}/global_conf_EU868_2dBi_indoor.json >/dev/null 2>&1
             rm -f ${RUNDIR}/global_conf_EU868_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_AU915_2dBi_indoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_AU915_4dBi_outdoor.json >/dev/null 2>&1            
+            ;;
+            "AU915")
+            mv -f ${RUNDIR}/global_conf_AU915_2dBi_indoor.json ${RUNDIR}/global_conf_2dBi_indoor.json >/dev/null 2>&1
+            mv -f ${RUNDIR}/global_conf_AU915_4dBi_outdoor.json ${RUNDIR}/global_conf_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_EU868_2dBi_indoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_EU868_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_US915_2dBi_indoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_US915_4dBi_outdoor.json >/dev/null 2>&1            
             ;;
         esac
         # Create default global_conf.json based on 4Bi by default
