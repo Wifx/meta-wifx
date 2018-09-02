@@ -19,9 +19,13 @@ AT91BOOTSTRAP_MACHINE ??= "${MACHINE}"
 
 AT91BOOTSTRAP_CONFIG_sama5d4-lorix-one ??= "${AT91BOOTSTRAP_MACHINE}nf_uboot_secure"
 AT91BOOTSTRAP_CONFIG_sama5d4-lorix-one-sd ??= "${AT91BOOTSTRAP_MACHINE}sd_uboot_secure"
+AT91BOOTSTRAP_CONFIG_sama5d4-lorix-one-512 ??= "${AT91BOOTSTRAP_MACHINE}nf_uboot_secure"
+AT91BOOTSTRAP_CONFIG_sama5d4-lorix-one-512-sd ??= "${AT91BOOTSTRAP_MACHINE}sd_uboot_secure"
 AT91BOOTSTRAP_TARGET ??= "${AT91BOOTSTRAP_CONFIG}_defconfig"
 AT91BOOTSTRAP_LOAD_sama5d4-lorix-one ??= "nandflashboot-uboot"
 AT91BOOTSTRAP_LOAD_sama5d4-lorix-one-sd ??= "sdboot-uboot"
+AT91BOOTSTRAP_LOAD_sama5d4-lorix-one-512 ??= "nandflashboot-uboot"
+AT91BOOTSTRAP_LOAD_sama5d4-lorix-one-512-sd ??= "sdboot-uboot"
 
 AT91BOOTSTRAP_SUFFIX ?= "bin"
 AT91BOOTSTRAP_IMAGE ?= "${AT91BOOTSTRAP_MACHINE}-${AT91BOOTSTRAP_LOAD}-${PV}.${AT91BOOTSTRAP_SUFFIX}"
@@ -31,34 +35,14 @@ AT91BOOTSTRAP_SYMLINK ?= "at91bootstrap-${AT91BOOTSTRAP_MACHINE}.${AT91BOOTSTRAP
 EXTRA_OEMAKE = 'CROSS_COMPILE=${TARGET_PREFIX} CC="${TARGET_PREFIX}gcc ${TOOLCHAIN_OPTIONS}"'
 
 do_configure() {
-	# Copy board defconfig to .config if .config does not exist. This
-	# allows recipes to manage the .config themselves in
-	# do_configure_prepend().
-	if [ -f "${S}/board/${AT91BOOTSTRAP_MACHINE}/${AT91BOOTSTRAP_TARGET}" ] && [ ! -f "${B}/.config" ]; then
-		cp "${S}/board/${AT91BOOTSTRAP_MACHINE}/${AT91BOOTSTRAP_TARGET}" "${B}/.config"
-	fi
-
-	# Copy defconfig to .config if .config does not exist. This allows
-	# recipes to manage the .config themselves in do_configure_prepend()
-	# and to override default settings with a custom file.
-	if [ -f "${WORKDIR}/defconfig" ] && [ ! -f "${B}/.config" ]; then
-		cp "${WORKDIR}/defconfig" "${B}/.config"
-	fi
-
-	if [ ! -f "${S}/.config" ]; then
-		bbfatal "No config files found"
-	fi
-
-	cml1_do_configure
-}
-
-do_configure() {
         # Copy board defconfig to .config if .config does not exist. This
 	# allows recipes to manage the .config themselves in
 	# do_configure_prepend().
 	
 	if [ "${MACHINE}" = "sama5d4-lorix-one" ] || \
-	   [ "${MACHINE}" = "sama5d4-lorix-one-sd" ]; then
+           [ "${MACHINE}" = "sama5d4-lorix-one-512" ] || \
+           [ "${MACHINE}" = "sama5d4-lorix-one-sd" ] || \
+	   [ "${MACHINE}" = "sama5d4-lorix-one-512-sd" ]; then
 		if [ -f "${S}/contrib/board/wifx/${AT91BOOTSTRAP_MACHINE}/${AT91BOOTSTRAP_TARGET}" ] && [ ! -f "${B}/.config" ]; then
 			cp "${S}/contrib/board/wifx/${AT91BOOTSTRAP_MACHINE}/${AT91BOOTSTRAP_TARGET}" "${B}/.config"
 		fi

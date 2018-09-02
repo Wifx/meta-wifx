@@ -1,7 +1,7 @@
 # This layer provides support for LORX One Wifx gateway
 
 ## Supported SoCs / MACHINE names
--   LORIX One product / sama5d4-lorix-one
+-   LORIX One product / sama5d4-lorix-one (256 and 512MB NAND versions)
 
 ## Sources
 
@@ -142,11 +142,17 @@ names" chapter above and edit the "local.conf" file. \
     And the content:
     ```
     [...]
-    # LORIX One NAND memory based
+    # LORIX One NAND memory based (256MB NAND version)
     MACHINE ??= "sama5d4-lorix-one"
     or
-    # LORIX One SD-Card memory based
+    # LORIX One NAND memory based (512MB NAND version)
+    MACHINE ??= "sama5d4-lorix-one-512"
+    or
+    # LORIX One SD-Card memory based (256MB NAND version)
     MACHINE ??= "sama5d4-lorix-one-sd"
+    or
+    # LORIX One SD-Card memory based (512MB NAND version)
+    MACHINE ??= "sama5d4-lorix-one-512-sd"
     [...]
     DL_DIR ?= "your_download_directory_path"
     [...]
@@ -156,6 +162,9 @@ names" chapter above and edit the "local.conf" file. \
     [...]
     USER_CLASSES ?= "buildstats image-mklibs"
     ```
+
+    > **Note:** You can find more information about versions on the 
+    [dedicated page of the LORIX One's wiki](http://lorixone.io/wiki/Versions)
 
     To get better performance, use the "poky-wifx" distribution by also adding that
 line:
