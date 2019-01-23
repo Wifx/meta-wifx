@@ -12,14 +12,13 @@ SRC_URI = " \
     file://logrotate \
     file://configs/global_conf_EU868_2dBi_indoor.json \
     file://configs/global_conf_EU868_4dBi_outdoor.json \
-    file://configs/global_conf_US915_2dBi_indoor.json \
     file://configs/global_conf_US915_4dBi_outdoor.json \
-    file://configs/global_conf_AU915_2dBi_indoor.json \
     file://configs/global_conf_AU915_4dBi_outdoor.json \
+    file://configs/global_conf_AS2_4dBi_outdoor.json \
     file://configs/local_conf.json \        
     "
 
-PR = "r9"
+PR = "r10"
 S = "${WORKDIR}/git"
 
 DEPENDS = "lora-gateway"
@@ -134,26 +133,30 @@ pkg_postinst_${PN}_append () {
             "EU868")
             mv -f ${RUNDIR}/global_conf_EU868_2dBi_indoor.json ${RUNDIR}/global_conf_2dBi_indoor.json >/dev/null 2>&1
             mv -f ${RUNDIR}/global_conf_EU868_4dBi_outdoor.json ${RUNDIR}/global_conf_4dBi_outdoor.json >/dev/null 2>&1
-            rm -f ${RUNDIR}/global_conf_US915_2dBi_indoor.json >/dev/null 2>&1
             rm -f ${RUNDIR}/global_conf_US915_4dBi_outdoor.json >/dev/null 2>&1
-            rm -f ${RUNDIR}/global_conf_AU915_2dBi_indoor.json >/dev/null 2>&1
             rm -f ${RUNDIR}/global_conf_AU915_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_AS2_4dBi_outdoor.json >/dev/null 2>&1
             ;;
             "US915")
-            mv -f ${RUNDIR}/global_conf_US915_2dBi_indoor.json ${RUNDIR}/global_conf_2dBi_indoor.json >/dev/null 2>&1
             mv -f ${RUNDIR}/global_conf_US915_4dBi_outdoor.json ${RUNDIR}/global_conf_4dBi_outdoor.json >/dev/null 2>&1
             rm -f ${RUNDIR}/global_conf_EU868_2dBi_indoor.json >/dev/null 2>&1
             rm -f ${RUNDIR}/global_conf_EU868_4dBi_outdoor.json >/dev/null 2>&1
-            rm -f ${RUNDIR}/global_conf_AU915_2dBi_indoor.json >/dev/null 2>&1
             rm -f ${RUNDIR}/global_conf_AU915_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_AS2_4dBi_outdoor.json >/dev/null 2>&1
             ;;
             "AU915")
-            mv -f ${RUNDIR}/global_conf_AU915_2dBi_indoor.json ${RUNDIR}/global_conf_2dBi_indoor.json >/dev/null 2>&1
             mv -f ${RUNDIR}/global_conf_AU915_4dBi_outdoor.json ${RUNDIR}/global_conf_4dBi_outdoor.json >/dev/null 2>&1
             rm -f ${RUNDIR}/global_conf_EU868_2dBi_indoor.json >/dev/null 2>&1
             rm -f ${RUNDIR}/global_conf_EU868_4dBi_outdoor.json >/dev/null 2>&1
-            rm -f ${RUNDIR}/global_conf_US915_2dBi_indoor.json >/dev/null 2>&1
             rm -f ${RUNDIR}/global_conf_US915_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_AS2_4dBi_outdoor.json >/dev/null 2>&1
+            ;;
+            "AS2")
+            mv -f ${RUNDIR}/global_conf_AS2_4dBi_outdoor.json ${RUNDIR}/global_conf_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_EU868_2dBi_indoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_EU868_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_US915_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${RUNDIR}/global_conf_AU915_4dBi_outdoor.json >/dev/null 2>&1
             ;;
         esac
         # Create default global_conf.json based on 4Bi by default
@@ -166,13 +169,17 @@ pkg_postinst_${PN}_append () {
         
         # Update gateway ID based on the eth0 MAC address
         /opt/lorix/utils/update_gwid.sh ${RUNDIR}/global_conf.json
-        /opt/lorix/utils/update_gwid.sh ${RUNDIR}/global_conf_2dBi_indoor.json
+        if [ -f ${RUNDIR}/global_conf_2dBi_indoor.json ]; then
+            /opt/lorix/utils/update_gwid.sh ${RUNDIR}/global_conf_2dBi_indoor.json
+        fi
         /opt/lorix/utils/update_gwid.sh ${RUNDIR}/global_conf_4dBi_outdoor.json
         /opt/lorix/utils/update_gwid.sh ${RUNDIR}/local_conf.json
 
         # Copy files for factory reset management
         cp ${RUNDIR}/global_conf.json ${BKPDIR}
-        cp ${RUNDIR}/global_conf_2dBi_indoor.json ${BKPDIR}
+        if [ -f ${RUNDIR}/global_conf_2dBi_indoor.json ]; then
+            cp ${RUNDIR}/global_conf_2dBi_indoor.json ${BKPDIR}
+        fi
         cp ${RUNDIR}/global_conf_4dBi_outdoor.json ${BKPDIR}
         cp ${RUNDIR}/local_conf.json ${BKPDIR}
         

@@ -6,6 +6,7 @@ SRC_URI = " \
     file://configs/global_conf_EU868_4dBi_outdoor.json \
     file://configs/global_conf_US915_4dBi_outdoor.json \
     file://configs/global_conf_AU915_4dBi_outdoor.json \
+    file://configs/global_conf_AS2_4dBi_outdoor.json \
     file://configs/local_conf.json \        
     "
 
@@ -68,16 +69,25 @@ pkg_postinst_${PN}_append () {
             mv -f ${UTILSDIR}/global_conf_EU868_4dBi_outdoor.json ${UTILSDIR}/global_conf.json >/dev/null 2>&1
             rm -f ${UTILSDIR}/global_conf_US915_4dBi_outdoor.json >/dev/null 2>&1
             rm -f ${UTILSDIR}/global_conf_AU915_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${UTILSDIR}/global_conf_AS2_4dBi_outdoor.json >/dev/null 2>&1
             ;;
             "US915")
             mv -f ${UTILSDIR}/global_conf_US915_4dBi_outdoor.json ${UTILSDIR}/global_conf.json >/dev/null 2>&1
             rm -f ${UTILSDIR}/global_conf_EU868_4dBi_outdoor.json >/dev/null 2>&1
             rm -f ${UTILSDIR}/global_conf_AU915_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${UTILSDIR}/global_conf_AS2_4dBi_outdoor.json >/dev/null 2>&1
             ;;
             "AU915")
             mv -f ${UTILSDIR}/global_conf_AU915_4dBi_outdoor.json ${UTILSDIR}/global_conf.json >/dev/null 2>&1
             rm -f ${UTILSDIR}/global_conf_EU868_4dBi_outdoor.json >/dev/null 2>&1
             rm -f ${UTILSDIR}/global_conf_US915_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${UTILSDIR}/global_conf_AS2_4dBi_outdoor.json >/dev/null 2>&1
+            ;;
+            "AS2")
+            mv -f ${UTILSDIR}/global_conf_AU915_4dBi_outdoor.json ${UTILSDIR}/global_conf.json >/dev/null 2>&1
+            rm -f ${UTILSDIR}/global_conf_EU868_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${UTILSDIR}/global_conf_US915_4dBi_outdoor.json >/dev/null 2>&1
+            rm -f ${UTILSDIR}/global_conf_AU915_4dBi_outdoor.json >/dev/null 2>&1
             ;;
         esac
     
