@@ -20,6 +20,8 @@ IMAGE_INSTALL += "\
     python3-pip \
     python3-setuptools \
     \
+    curl \
+    \
     arptables \
     ebtables \
     dnsmasq \
@@ -35,5 +37,7 @@ IMAGE_INSTALL += "\
     nginx \
     monkey \
     lighttpd \
+    \
+    watchdog \
     "
     
