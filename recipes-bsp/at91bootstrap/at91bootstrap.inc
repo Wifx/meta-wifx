@@ -12,6 +12,7 @@ BUGTRACKER = "https://github.com/linux4sam/at91bootstrap/issues"
 SECTION = "bootloaders"
 LICENSE = "ATMEL"
 LIC_FILES_CHKSUM = "file://main.c;endline=27;md5=42f86d2f6fd17d1221c5c651b487a07f"
+PROVIDES = "virtual/firststage"
 
 inherit cml1 deploy
 
