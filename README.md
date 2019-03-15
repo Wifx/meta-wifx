@@ -241,7 +241,7 @@ debug utilities
 17. In all cases, the toolchain installer is located in
 build-wifx/tmp/deploy/sdk
 
-Maintainers: Yannick Lanz <yannick.lanz@wifx.com>
+Maintainers: Yannick Lanz <yannick.lanz@wifx.net>
 
 When creating patches insert the [meta-wifx] tag in the subject, for example use
 something like: git format-patch -s --subject-prefix='meta-wifx][PATCH'
