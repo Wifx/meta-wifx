@@ -10,8 +10,11 @@ require recipes-kernel/linux/linux-dtb.inc
 RDEPENDS_kernel-base=""
 FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}-4.4:"
 
-PV = "4.4+git${SRCPV}"
-PR = "r2"
+LINUX_VERSION ?= "4.4.68"
+LINUX_VERSION_EXTENSION = "-wifx"
+
+PV = "${LINUX_VERSION}${LINUX_VERSION_EXTENSION}"
+PR = "r0"
 
 S = "${WORKDIR}/git"
 
@@ -48,10 +51,16 @@ kernel_do_configure_prepend() {
 	if [ -f "${WORKDIR}/sama5d4_lorix_one_defconfig" ] && [ ! -f "${B}/.config" ]; then
 		cp "${WORKDIR}/sama5d4_lorix_one_defconfig" "${B}/.config"
 	fi
+    
+    if [ -f "${B}/.scmversion" ]; then
+        rm -f ${B}/.scmversion
+    fi
+    
+    # Create empty scmversion to remove the "+" at end of the kernel version
+    echo "${PV}" >> "${B}/.scmversion"
 }
 
 kernel_do_configure_append() {
-	rm -f ${B}/.scmversion ${S}/.scmversion
 	cd ${S}; git status; cd -
 }
 
