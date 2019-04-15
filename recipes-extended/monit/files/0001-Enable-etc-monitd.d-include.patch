@@ -1,0 +1,23 @@
+From 32211b881281291c41b3a57f5a3b344d7bcb3b99 Mon Sep 17 00:00:00 2001
+From: Yannick Lanz <yannick.lanz@wifx.net>
+Date: Mon, 15 Apr 2019 10:00:37 +0000
+Subject: [PATCH] Enable etc monitd.d include
+
+---
+ monitrc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/monitrc b/monitrc
+index 258ebcf..9f1182a 100644
+--- a/monitrc
++++ b/monitrc
+@@ -301,5 +301,5 @@ set httpd port 2812 and
+ ## It is possible to include additional configuration parts from other files or
+ ## directories.
+ #
+-#  include /etc/monit.d/*
++include /etc/monit.d/*
+ #
+-- 
+2.7.4
+

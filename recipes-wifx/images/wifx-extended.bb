@@ -39,5 +39,6 @@ IMAGE_INSTALL += "\
     lighttpd \
     \
     watchdog \
+    monit \
     "
     
