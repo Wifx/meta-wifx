@@ -1,0 +1,3 @@
+check process ttn-gw with pidfile /var/run/ttn-gw.pid
+    start program = "/etc/init.d/ttn-gw start"
+    stop program = "/etc/init.d/ttn-gw stop"
