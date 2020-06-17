@@ -1,0 +1,27 @@
+From 0fd9c79f0780f07ca00e02dfc74e6d4b4614c0fd Mon Sep 17 00:00:00 2001
+From: Yannick Lanz <yannick.lanz@wifx.net>
+Date: Thu, 11 Jun 2020 10:15:08 +0200
+Subject: [PATCH 1/2] net: macb: Incomplete received frame is not a critical
+ error Warning log level is more appropriate to avoid any confusion.
+
+Signed-off-by: Yannick Lanz <yannick.lanz@wifx.net>
+---
+ drivers/net/ethernet/cadence/macb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+index 268a6dc8070d..ecb3f5ade4d8 100644
+--- a/drivers/net/ethernet/cadence/macb.c
++++ b/drivers/net/ethernet/cadence/macb.c
+@@ -833,7 +833,7 @@ static int gem_rx(struct macb *bp, int budget)
+ 		count++;
+ 
+ 		if (!(ctrl & MACB_BIT(RX_SOF) && ctrl & MACB_BIT(RX_EOF))) {
+-			netdev_err(bp->dev,
++			netdev_warn(bp->dev,
+ 				   "not whole frame pointed by descriptor\n");
+ 			bp->stats.rx_dropped++;
+ 			break;
+-- 
+2.17.1
+

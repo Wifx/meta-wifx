@@ -1,0 +1,104 @@
+From 9c66c1f66ebe52c4f5cff601d6f8e8a1a93d7f2a Mon Sep 17 00:00:00 2001
+From: Yannick Lanz <yannick.lanz@wifx.net>
+Date: Thu, 11 Jun 2020 10:19:08 +0200
+Subject: [PATCH 2/2] net: macb: Manage BNA (Buffer Not Available) error and
+ remove race condition for the GEM peripheral. Fix netif freeze in case of
+ high incoming load.
+
+Signed-off-by: Yannick Lanz <yannick.lanz@wifx.net>
+---
+ drivers/net/ethernet/cadence/macb.c | 71 ++++++++++++++++++++++++++++-
+ 1 file changed, 70 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+index ecb3f5ade4d8..686e43a2b958 100644
+--- a/drivers/net/ethernet/cadence/macb.c
++++ b/drivers/net/ethernet/cadence/macb.c
+@@ -1053,6 +1053,71 @@ static int macb_rx(struct macb *bp, int budget)
+ 	return received;
+ }
+ 
++static int gem_poll(struct napi_struct *napi, int budget)
++{
++	struct macb *bp = container_of(napi, struct macb, napi);
++	int work_done;
++	u32 status;
++
++	status = macb_readl(bp, RSR);
++	/* Don't clear yet the BNA error bit if any */
++	status &= ~MACB_BIT(BNA);
++	macb_writel(bp, RSR, status);
++
++	work_done = 0;
++
++	netdev_vdbg(bp->dev, "poll: status = %08lx, budget = %d\n",
++		    (unsigned long)status, budget);
++
++	work_done = bp->macbgem_ops.mog_rx(bp, budget);
++	if (work_done < budget) {
++		napi_complete(napi);
++
++		/* Packets received while interrupts were disabled or BNA error */
++		status = macb_readl(bp, RSR);
++		if (status) {
++			if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
++				macb_writel(bp, ISR, MACB_BIT(RCOMP));
++
++			if (unlikely(status & MACB_BIT(BNA))) {
++				netdev_warn(bp->dev,
++					   "buffer not available for incoming packet\n");
++
++				/* disable Rx interrupts and eventual HRESP error */
++				macb_writel(bp, IDR, MACB_RX_INT_FLAGS | MACB_BIT(HRESP));
++
++				/* free a slot to allow the refill */
++				bp->rx_tail++;
++				bp->stats.rx_dropped++;
++
++				/* clear the error before resolving it to avoid a race */
++				macb_writel(bp, RSR, MACB_BIT(BNA));
++
++				/* refill one slot to make it available for the DMA */
++				gem_rx_refill(bp);
++
++				/* enable Rx interrupts */
++				macb_writel(bp, IER, MACB_RX_INT_FLAGS | MACB_BIT(HRESP));
++			}
++
++			napi_reschedule(napi);
++		} else {
++			macb_writel(bp, IER, MACB_RX_INT_FLAGS);
++
++			/* IRQ are disabled, not masked. Reschedule to avoid a race */
++			status = macb_readl(bp, RSR);
++			if (status) {
++				macb_writel(bp, IER, MACB_RX_INT_FLAGS);
++				napi_reschedule(napi);
++			}
++		}
++	}
++
++	/* TODO: Handle errors */
++
++	return work_done;
++}
++
+ static int macb_poll(struct napi_struct *napi, int budget)
+ {
+ 	struct macb *bp = container_of(napi, struct macb, napi);
+@@ -2521,7 +2586,11 @@ static int macb_init(struct platform_device *pdev)
+ 	}
+ 
+ 	dev->netdev_ops = &macb_netdev_ops;
+-	netif_napi_add(dev, &bp->napi, macb_poll, 64);
++	if (macb_is_gem(bp)) {
++		netif_napi_add(dev, &bp->napi, gem_poll, 64);
++	} else {
++		netif_napi_add(dev, &bp->napi, macb_poll, 64);
++	}
+ 
+ 	/* setup appropriated routines according to adapter type */
+ 	if (macb_is_gem(bp)) {
+-- 
+2.17.1
+
